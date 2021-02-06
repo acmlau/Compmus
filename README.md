@@ -11,7 +11,7 @@ Interesting comparison points in the corpus of this project will be the overall 
 ### Level of representativeness  
 TikTok is a very creative platform where people use all kinds of remix songs which aren't accessible on Spotify although they are very popular songs. In the following table popular songs that were not listed on spotify are shown.
 
-| Song                                      | Month    | Rank |
+| Song Title                                | Month    | Rank |
 |-------------------------------------------|----------|:----:|
 | #hiteverybeat                             | March    | 3    |
 | Over it Chinese New year Remix by JohhnyG | March    | 4    |
@@ -30,7 +30,7 @@ TikTok is a very creative platform where people use all kinds of remix songs whi
 
 There were also the song that were multiple times in the top 10, these are listed in the following table <br/>
 
-| Song                     | Repetition |
+| Song Title               | Repetition |
 |--------------------------|:----------:|
 | Savage                   | 3          |
 | Roses                    | 2          |
@@ -50,3 +50,6 @@ There were also the song that were multiple times in the top 10, these are liste
 * *Steven Universe* - L.Dre: one of the few slow paced songs, and it is only 2.14 minutes long  without lyrics. 
 * *Monkeys Spinning Monkeys* - Keving MacLeod, one of the few songs that have no lyrics also very short 
 * Funny to see that from December there are seasonal songs e.g. *All I Want for Christmas is You* - Mariah Carey and *Jinge Bell Rock* - Bobby Helms. 
+
+#### Note
+The Song Titles in the table are copied from the https://tokboard.com/months website
