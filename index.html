@@ -365,6 +365,119 @@ summary {
 </div>
 </div>
 </div>
+<div id="tryout-a-code-chunk" class="section level1">
+<h1>Tryout a code chunk</h1>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --</code></pre>
+<pre><code>## v ggplot2 3.3.3     v purrr   0.3.4
+## v tibble  3.0.6     v dplyr   1.0.3
+## v tidyr   1.1.2     v stringr 1.4.0
+## v readr   1.4.0     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(spotifyr)</code></pre>
+<pre class="r"><code>ecm &lt;-get_playlist_audio_features(&quot;&quot;,&quot;37i9dQZF1DX8C9xQcOrE6T&quot;)</code></pre>
+<pre class="r"><code>summary &lt;- ecm %&gt;%
+  summarise(
+    mean_speechiness = mean(speechiness),
+    mean_acousticness = mean(acousticness),
+    mean_liveness = mean(liveness),
+    sd_speechiness = sd(speechiness),
+    sd_acousticness = sd(acousticness),
+    sd_liveness = sd(liveness),
+    median_speechiness = median(speechiness),
+    median_acousticness = median(acousticness),
+    median_liveness = median(liveness),
+    mad_speechiness = mad(speechiness),
+    mad_acousticness = mad(acousticness),
+    mad_liveness = mad(liveness)
+  )</code></pre>
+<pre class="r"><code>str(get_playlist_audio_features(&quot;&quot;,&quot;37i9dQZF1DX8C9xQcOrE6T&quot;) %&gt;%
+  filter(track.name == &#39;Let It Go - From &quot;Frozen&quot;/Soundtrack Version&#39;))</code></pre>
+<pre><code>## tibble [1 x 61] (S3: tbl_df/tbl/data.frame)
+##  $ playlist_id                       : chr &quot;37i9dQZF1DX8C9xQcOrE6T&quot;
+##  $ playlist_name                     : chr &quot;Disney Hits&quot;
+##  $ playlist_img                      : chr &quot;https://i.scdn.co/image/ab67706f000000034fb035ee54262509612d6900&quot;
+##  $ playlist_owner_name               : chr &quot;Spotify&quot;
+##  $ playlist_owner_id                 : chr &quot;spotify&quot;
+##  $ danceability                      : num 0.543
+##  $ energy                            : num 0.485
+##  $ key                               : int 8
+##  $ loudness                          : num -6.85
+##  $ mode                              : int 1
+##  $ speechiness                       : num 0.0305
+##  $ acousticness                      : num 0.558
+##  $ instrumentalness                  : num 0
+##  $ liveness                          : num 0.12
+##  $ valence                           : num 0.371
+##  $ tempo                             : num 137
+##  $ track.id                          : chr &quot;0qcr5FMsEO85NAQjrlDRKo&quot;
+##  $ analysis_url                      : chr &quot;https://api.spotify.com/v1/audio-analysis/0qcr5FMsEO85NAQjrlDRKo&quot;
+##  $ time_signature                    : int 4
+##  $ added_at                          : chr &quot;2020-02-03T07:13:07Z&quot;
+##  $ is_local                          : logi FALSE
+##  $ primary_color                     : logi NA
+##  $ added_by.href                     : chr &quot;https://api.spotify.com/v1/users/&quot;
+##  $ added_by.id                       : chr &quot;&quot;
+##  $ added_by.type                     : chr &quot;user&quot;
+##  $ added_by.uri                      : chr &quot;spotify:user:&quot;
+##  $ added_by.external_urls.spotify    : chr &quot;https://open.spotify.com/user/&quot;
+##  $ track.artists                     :List of 1
+##   ..$ :&#39;data.frame&#39;: 1 obs. of  6 variables:
+##   .. ..$ href                 : chr &quot;https://api.spotify.com/v1/artists/73Np75Wv2tju61Eo9Zw4IR&quot;
+##   .. ..$ id                   : chr &quot;73Np75Wv2tju61Eo9Zw4IR&quot;
+##   .. ..$ name                 : chr &quot;Idina Menzel&quot;
+##   .. ..$ type                 : chr &quot;artist&quot;
+##   .. ..$ uri                  : chr &quot;spotify:artist:73Np75Wv2tju61Eo9Zw4IR&quot;
+##   .. ..$ external_urls.spotify: chr &quot;https://open.spotify.com/artist/73Np75Wv2tju61Eo9Zw4IR&quot;
+##  $ track.available_markets           :List of 1
+##   ..$ : chr [1:93] &quot;AD&quot; &quot;AE&quot; &quot;AL&quot; &quot;AR&quot; ...
+##  $ track.disc_number                 : int 1
+##  $ track.duration_ms                 : int 223840
+##  $ track.episode                     : logi FALSE
+##  $ track.explicit                    : logi FALSE
+##  $ track.href                        : chr &quot;https://api.spotify.com/v1/tracks/0qcr5FMsEO85NAQjrlDRKo&quot;
+##  $ track.is_local                    : logi FALSE
+##  $ track.name                        : chr &quot;Let It Go - From \&quot;Frozen\&quot;/Soundtrack Version&quot;
+##  $ track.popularity                  : int 73
+##  $ track.preview_url                 : chr NA
+##  $ track.track                       : logi TRUE
+##  $ track.track_number                : int 5
+##  $ track.type                        : chr &quot;track&quot;
+##  $ track.uri                         : chr &quot;spotify:track:0qcr5FMsEO85NAQjrlDRKo&quot;
+##  $ track.album.album_type            : chr &quot;album&quot;
+##  $ track.album.artists               :List of 1
+##   ..$ :&#39;data.frame&#39;: 1 obs. of  6 variables:
+##   .. ..$ href                 : chr &quot;https://api.spotify.com/v1/artists/0LyfQWJT6nXafLPZqxe9Of&quot;
+##   .. ..$ id                   : chr &quot;0LyfQWJT6nXafLPZqxe9Of&quot;
+##   .. ..$ name                 : chr &quot;Various Artists&quot;
+##   .. ..$ type                 : chr &quot;artist&quot;
+##   .. ..$ uri                  : chr &quot;spotify:artist:0LyfQWJT6nXafLPZqxe9Of&quot;
+##   .. ..$ external_urls.spotify: chr &quot;https://open.spotify.com/artist/0LyfQWJT6nXafLPZqxe9Of&quot;
+##  $ track.album.available_markets     :List of 1
+##   ..$ : chr [1:93] &quot;AD&quot; &quot;AE&quot; &quot;AL&quot; &quot;AR&quot; ...
+##  $ track.album.href                  : chr &quot;https://api.spotify.com/v1/albums/7lZs5r4oQV2nutddffLrg0&quot;
+##  $ track.album.id                    : chr &quot;7lZs5r4oQV2nutddffLrg0&quot;
+##  $ track.album.images                :List of 1
+##   ..$ :&#39;data.frame&#39;: 3 obs. of  3 variables:
+##   .. ..$ height: int [1:3] 640 300 64
+##   .. ..$ url   : chr [1:3] &quot;https://i.scdn.co/image/ab67616d0000b2734b1899123e484c034e31164e&quot; &quot;https://i.scdn.co/image/ab67616d00001e024b1899123e484c034e31164e&quot; &quot;https://i.scdn.co/image/ab67616d000048514b1899123e484c034e31164e&quot;
+##   .. ..$ width : int [1:3] 640 300 64
+##  $ track.album.name                  : chr &quot;Frozen (Original Motion Picture Soundtrack / Deluxe Edition)&quot;
+##  $ track.album.release_date          : chr &quot;2013-01-01&quot;
+##  $ track.album.release_date_precision: chr &quot;day&quot;
+##  $ track.album.total_tracks          : int 59
+##  $ track.album.type                  : chr &quot;album&quot;
+##  $ track.album.uri                   : chr &quot;spotify:album:7lZs5r4oQV2nutddffLrg0&quot;
+##  $ track.album.external_urls.spotify : chr &quot;https://open.spotify.com/album/7lZs5r4oQV2nutddffLrg0&quot;
+##  $ track.external_ids.isrc           : chr &quot;USWD11366376&quot;
+##  $ track.external_urls.spotify       : chr &quot;https://open.spotify.com/track/0qcr5FMsEO85NAQjrlDRKo&quot;
+##  $ video_thumbnail.url               : logi NA
+##  $ key_name                          : chr &quot;G#&quot;
+##  $ mode_name                         : chr &quot;major&quot;
+##  $ key_mode                          : chr &quot;G# major&quot;</code></pre>
+</div>
 
 
 
