@@ -9,7 +9,7 @@ output: html_document
 Portfolio for the course Computational Musicology for BSc Kunstmatige Intelligentie.
 
 ## The Corpus
-The corpus for this project is a playlist from Spotify. This playlists is a collection of songs that are famous from TikTok - a short-form video social media app. In these 15 seconds videos music is played and people lip-sync, dance and make music-driven memes. As the spaces people normally enjoy music were impacted by the pandamic, TikTok helped fill the need for communal musical experience all over the world. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from <https://tokboard.com/months>. If a song in the top 10 of the month was not available on Spotify the song is skipped and the 11 song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 84 songs a total of 4 hours and 14 minutes. 
+The corpus for this project is a playlist from Spotify. This playlists is a collection of songs that are famous from TikTok - a short-form video social media app. In these 15 seconds videos music is played and people lip-sync, dance and make music-driven memes. As the spaces people normally enjoy music were impacted by the pandamic, TikTok helped fill the need for communal musical experience all over the world. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from <https://tokboard.com/months>. If a song in the top 10 of the month was not available on Spotify the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
 
 I want to find out how different these popular TikTok songs are from one another. The genres of the songs are quite diverse. Maybe there is a factor that is a core element of becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out if the songs within a trend are the same/different. I.e. are all dance tiktok songs alike? How are alike are meme TikTok songs? etc. 
 
@@ -17,7 +17,7 @@ I want to find out how different these popular TikTok songs are from one another
 Interesting comparison points in the corpus of this project will be the overall mood of a song. Psychologist Robert Thayer's came up with a traditional model of moood. Where songs can be categorised along the lines of energy and stess, from happy to sad and calm to energetic (Bhat et al 359). Next to these 4 categories there are also 4 sub categories e.g. Happy - energetic, Happy - calm, etc. The corpus has a lot of Happy, Energetic, Happy - Energetic and a few Happy - Calm and Calm songs. It is expected that the intensity for Energetic and Happy - Energetic songs are on the higher spectrum than Happy - Calm and Calm songs. Another musical component that can be looked at is the Timbre of a song. Timbre is the tonal quality of a piece created by harmonics. It is to no surprise that these will be different between moods as well. Happy, Happy - Energetic and Energetic songs will have around a medium timbre. Whereas Calm and Happy - Calm songs will most likely have a low timbre. The pitch intervals of the songs will probably vary quite a lot between the mood categories, as it is very dependent on the singer's voice, and the instruments that are used. Lastly the rhythm of songs with a Happy, Happy - Energetic and Energetic mood will most likely be high paced, whereas Calm and Calm - Happy somgs will have a more relaxed and slow rhythm. 
 
 ### Level of representativeness  
-TikTok is a very creative platform where people use all kinds of remix songs which aren't accessible on Spotify although they are very popular songs. In the following table popular songs that were not listed on spotify are shown.
+TikTok is a very creative platform where people use all kinds of remix songs which aren't accessible on Spotify although they are very popular songs. In the following table popular songs that were *not* listed on Spotify are shown.
 
 | Song Title                                | Month    | Rank |
 |-------------------------------------------|----------|:----:|
@@ -30,13 +30,13 @@ TikTok is a very creative platform where people use all kinds of remix songs whi
 | Cari Mama Muda                            | May      | 7    |
 | Kream bebiisan edition                    | May      | 8    |
 | original sound                            | May      | 11   |
-| ओरिजिनल साउंड                             | June     | 6    |
+| ओरिजिनल साउंड                              | June     | 6    |
 | Gimme clout pls                           | June     | 7    |
 | Original sound                            | October  | 1    |
 | Viva La Swing                             | October  | 5    |
 | ... is sweaty                             | November | 8    |
 
-There were also the song that were multiple times in the top 10, these are listed in the following table <br/>
+Some songs are listed multiple times in the top ten of the months, these are listed in the following table <br/>
 
 | Song Title               | Repetition |
 |--------------------------|:----------:|
@@ -53,6 +53,24 @@ There were also the song that were multiple times in the top 10, these are liste
 | Classical Music          | 4          | 
 | Adderall                 | 2          |
 
+| Song Title               | Repetition | Months |
+|--------------------------|:----------:| :----: |
+| Savage                   | 3          | Mar - Apr - May| 
+| Roses                    | 2          | Mar - Apr | 
+| Laxed (Siren Beat)       | 2          | Apr - May |
+| Play Date                | 2          | Apr - May | 
+| Coño                     | 2          | May - June |
+| Love Story               | 2          | Jul - Aug| 
+| How you like that        | 2          | Jul - Aug | 
+| WAP                      | 2          | Aug - Sept | 
+| Monkeys Spinning Monkeys | 4          | Jul - Oct - Nov - Dec | 
+| Oh no                    | 2          | Nov - Dec | 
+| It's Tricky              | 2          | Nov - Dec | 
+| Classical Music          | 3          | Aug - Oct - Nov | 
+| Adderall                 | 2          | Nov - Dec | 
+
+Lastly, a final note needs to be made on the length of the TikTok videos. These videos can only be up to 15 seconds long. However, in this research the full length of the songs are used. The motivation behind this is because 15 does not allow for a thoroughly and detailed analysis between the songs. 
+
 ### Atypical songs in the corpus
 * *Eine kleine Nachtmusik K.* - Wolfgang Amadeus, stands out a lot from the rest. It is the only classical piece in the corpus and is composed in the year 1787. 
 * *Steven Universe* - L.Dre: one of the few slow paced songs, and it is only 2.14 minutes long  without lyrics. 
@@ -67,10 +85,61 @@ The Song Titles in the table are copied from the <https://tokboard.com/months> w
 library(tidyverse)
 library(spotifyr)
 ```
+Loading playlists from monthly top 10 songs from TikTok March 2020 - December 2020
+```{r}
+mar <-get_playlist_audio_features("","0IIt2QOYxRawDHQbZ8ln3M") 
+apr <-get_playlist_audio_features("","0PTklfVTalxE8j6T9NYZEG") 
+may <-get_playlist_audio_features("","093VTj7Esn9nYiFQFoa1YH") 
+jun <-get_playlist_audio_features("","2F3YMerEwMjXn3A4S7es6H") 
+jul <-get_playlist_audio_features("","4U9w6uCKivCsRLHFyZgkxI") 
+aug <-get_playlist_audio_features("","3zvNyJbb9rjdF0vag2O5xG")
+sep <-get_playlist_audio_features("","2APegDsKij3yaL1ffG6Bz4") 
+oct <-get_playlist_audio_features("","4np9mWC6T4O8x7hoxTeUPP") 
+nov <-get_playlist_audio_features("","5xyKvHZIeWGAgWJ6ZEVm3H") 
+dec <-get_playlist_audio_features("","4n90Xr0lxy1yLhbzTAgzTx") 
+``` 
+```{r}
+corpus <- 
+  bind_rows(
+    mar %>% mutate(category = "Mar"),
+    apr %>% mutate(category = "Apr"),
+    may %>% mutate(category = "May"),
+    jun %>% mutate(category = "Jun"),
+    jul %>% mutate(category = "Jul"),
+    aug %>% mutate(category = "Aug"),
+    sep %>% mutate(category = "Sep"),
+    oct %>% mutate(category = "Oct"),
+    nov %>% mutate(category = "Nov"),
+    dec %>% mutate(category = "Dec")
+  )
+
+
+```
+
+Delete the duplicate songs
+```{r}
+no_duplicate_corp <- corpus[!duplicated(corpus$track.name),]
+```
 
 ```{r}
-playlist90 <-get_playlist_audio_features("","0MmrdphoTkHhChZR5ympER") 
-playlist80 <-get_playlist_audio_features("","23xQYspGsaIsztrKTHM8cN") 
-``` 
+duplicates <-corpus$track.name[duplicated(corpus$track.name)]
+unique(duplicates)
+
+
+for (song in unique(duplicates)) {
+  hh <- corpus %>%
+    filter(track.name == song)
+  print(song)
+  print(hh %>% select("track.name", "category"))
+}
+```
+
+
+
+
+
+
+
+
 
 
