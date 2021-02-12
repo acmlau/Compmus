@@ -38,36 +38,21 @@ TikTok is a very creative platform where people use all kinds of remix songs whi
 
 Some songs are listed multiple times in the top ten of the months, these are listed in the following table <br/>
 
-| Song Title               | Repetition |
-|--------------------------|:----------:|
-| Savage                   | 3          |
-| Roses                    | 2          |
-| Laxed (Siren Beat)       | 2          |
-| Play Date                | 2          |
-| Coño                     | 2          |
-| How you like that        | 2          |
-| WAP                      | 2          |
-| Monkeys Spinning Monkeys | 3          |
-| Oh no                    | 2          |
-| It's Tricky              | 2          |
-| Classical Music          | 4          | 
-| Adderall                 | 2          |
-
-| Song Title               | Repetition | Months |
-|--------------------------|:----------:| :----: |
-| Savage                   | 3          | Mar - Apr - May| 
-| Roses                    | 2          | Mar - Apr | 
-| Laxed (Siren Beat)       | 2          | Apr - May |
-| Play Date                | 2          | Apr - May | 
-| Coño                     | 2          | May - June |
-| Love Story               | 2          | Jul - Aug| 
-| How you like that        | 2          | Jul - Aug | 
-| WAP                      | 2          | Aug - Sept | 
-| Monkeys Spinning Monkeys | 4          | Jul - Oct - Nov - Dec | 
-| Oh no                    | 2          | Nov - Dec | 
-| It's Tricky              | 2          | Nov - Dec | 
-| Classical Music          | 3          | Aug - Oct - Nov | 
-| Adderall                 | 2          | Nov - Dec | 
+| Song Title                |         Months       | Repetition |
+|-------------------------- | :-------------------:|:----------:|
+| Savage                    |   Mar - Apr - May    |     3      |
+| Roses                     |      Mar - Apr       |     2      |
+| Laxed (Siren Beat)        |      Apr - May       |     2      |
+| Play Date                 |      Apr - May       |     2      |
+| Coño                      |      May - Jun       |     2      |
+| Love Story                |      Jul - Aug       |     2      | 
+| How you like that         |      Jul - Aug       |     2      |
+| WAP                       |      Aug - Sept      |     2      | 
+| Monkeys Spinning Monkeys  |Jul - Oct - Nov - Dec |     4      | 
+| Oh no                     |      Nov - Dec       |     2      | 
+| It's Tricky               |      Nov - Dec       |     2      | 
+| Classical Music           |   Aug - Oct - Nov    |     3      | 
+| Adderall                  |      Nov - Dec       |     2      |
 
 Lastly, a final note needs to be made on the length of the TikTok videos. These videos can only be up to 15 seconds long. However, in this research the full length of the songs are used. The motivation behind this is because 15 does not allow for a thoroughly and detailed analysis between the songs. 
 
@@ -113,33 +98,32 @@ corpus <-
     dec %>% mutate(category = "Dec")
   )
 
-
+# Delete duplicate songs
+corpus <- corpus[!duplicated(corpus$track.name),]
 ```
 
-Delete the duplicate songs
-```{r}
-no_duplicate_corp <- corpus[!duplicated(corpus$track.name),]
-```
 
 ```{r}
-duplicates <-corpus$track.name[duplicated(corpus$track.name)]
-unique(duplicates)
-
-
-for (song in unique(duplicates)) {
-  hh <- corpus %>%
-    filter(track.name == song)
-  print(song)
-  print(hh %>% select("track.name", "category"))
-}
+names(corpus)
 ```
 
 
+```{r}
+features <- c("danceability",
+              "energy",
+              "key",
+              "loudness",
+              "mode",
+              "speechiness",
+              "acousticness",
+              "instrumentalness",
+              "liveness",
+              "valence",
+              "category")
+```
 
 
-
-
-
-
-
+```{r}
+ggplot(corpus, aes(x = key)) + geom_bar()
+```
 
