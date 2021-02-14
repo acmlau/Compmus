@@ -159,13 +159,12 @@ ggplot(corpus, aes(x = valence, y = danceability)) +
   xlim(0,1.0) +
   theme1 + 
   labs(title = "Danceability VS Valence",
-       subtitle = "Danceability describes how suitable a track is for dancing, and valence describes the musical positiveness conveyed by a track",
        x = "Valence",
        y = "Danceability",
        color = "Key")
 ```
 
-The 5 sings with a minority key do not seem to be outliers when looked at the danceability and valence. All songs have a danceability higher than 0.25. Valence has quite a decent distribution between $[0,1]$.
+Danceability describes how suitable a track is for dancing, and valence describes the musical positiveness conveyed by a track. The 5 sings with a minority key do not seem to be outliers when looked at the danceability and valence. All songs have a danceability higher than 0.25. Valence has quite a decent distribution between $[0,1]$.
 
 
 
