@@ -101,7 +101,7 @@ corpus <-
 # Delete duplicate songs
 corpus <- corpus[!duplicated(corpus$track.name),]
 ```
-
+That songs were populair on TikTok does not have to mean they are popular on Spotify.Let's find out. 
 ```{r}
 corpus %>%
   mutate(track.name = fct_reorder(track.name, track.popularity)) %>%
@@ -128,16 +128,13 @@ corpus %>%
        x = "Track title")
 ```
 
+Most of the 84 songs are above a popularity level of 50. 10 of the 84 songs have a popularity score lower than 50. 
+
 ```{r}
-theme1 <- theme(panel.background = element_rect(fill = "white", color = "grey")
-                # panel.grid.major = element_line(color = NA),
-                # panel.grid.minor = element_line(color = NA),
-                )
-
-
+theme1 <- theme(panel.background = element_rect(fill = "white", color = "grey"))
 
 ggplot(corpus, aes(x = key_name)) + 
-  geom_bar() + theme1 + 
+  geom_bar(fill = "skyblue") + theme1 + 
   labs(title = "Distribution of keys in the corpus",
        x = "Key",
        y = "Frequency")
