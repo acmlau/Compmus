@@ -102,28 +102,70 @@ corpus <-
 corpus <- corpus[!duplicated(corpus$track.name),]
 ```
 
-
 ```{r}
-names(corpus)
+corpus %>%
+  mutate(track.name = fct_reorder(track.name, track.popularity)) %>%
+  ggplot( aes(x=track.name, y=track.popularity)) +
+    geom_segment( aes(x = track.name,
+                      xend=track.name, 
+                      y = 0,
+                      yend=track.popularity)) +
+    geom_point( size=1, color="skyblue") +
+    coord_flip() +
+    xlab("") +
+    # facet_wrap(~category) + 
+    theme_minimal() +
+    theme(
+      axis.text.y = element_text(size = 4.5)
+    ) + 
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks.y = element_blank()
+  )+ 
+  labs(title = "Corpus track popularity",
+       y = "Popularity",
+       x = "Track title")
 ```
 
-
 ```{r}
-features <- c("danceability",
-              "energy",
-              "key",
-              "loudness",
-              "mode",
-              "speechiness",
-              "acousticness",
-              "instrumentalness",
-              "liveness",
-              "valence",
-              "category")
+theme1 <- theme(panel.background = element_rect(fill = "white", color = "grey")
+                # panel.grid.major = element_line(color = NA),
+                # panel.grid.minor = element_line(color = NA),
+                )
+
+
+
+ggplot(corpus, aes(x = key_name)) + 
+  geom_bar() + theme1 + 
+  labs(title = "Distribution of keys in the corpus",
+       x = "Key",
+       y = "Frequency")
+
 ```
 
+Only one song is (according to Spotify) written in D#. This is the song *Bulletproof* - La Roux. 
+The key E and F# both have two songs categorised by Spotify. E has songs *Shh* - Young Fanatic and *Adderall (Corvette Corvette)* - Popp Hunna. F# has songs *Party Girl* - StaySolidRocky and *Girls in the Hood* - Megan Thee Stallion.
 
 ```{r}
-ggplot(corpus, aes(x = key)) + geom_bar()
+different_keys <- corpus %>%
+  filter(key_name %in% c("D#", "E", "F#"))
+ggplot(corpus, aes(x = valence, y = danceability)) + 
+  geom_point() + 
+  geom_point(data = different_keys,
+             aes(x = valence, y = danceability, color = key_name),
+             size = 2) + 
+  ylim(0,1.0) +
+  xlim(0,1.0) +
+  theme1 + 
+  labs(title = "Danceability VS Valence",
+       subtitle = "Danceability describes how suitable a track is for dancing, and valence describes the musical positiveness conveyed by a track",
+       x = "Valence",
+       y = "Danceability",
+       color = "Key")
 ```
+
+The 5 sings with a minority key do not seem to be outliers when looked at the danceability and valence. All songs have a danceability higher than 0.25. Valence has quite a decent distribution between $[0,1]$.
+
+
 
