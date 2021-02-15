@@ -101,7 +101,7 @@ corpus <-
 # Delete duplicate songs
 corpus <- corpus[!duplicated(corpus$track.name),]
 ```
-That songs were populair on TikTok does not have to mean they are popular on Spotify.Let's find out. 
+That songs were populair on TikTok does not have to mean they are popular on Spotify. Let's find out. 
 ```{r}
 corpus %>%
   mutate(track.name = fct_reorder(track.name, track.popularity)) %>%
@@ -128,7 +128,21 @@ corpus %>%
        x = "Track title")
 ```
 
-Most of the 84 songs are above a popularity level of 50. 10 of the 84 songs have a popularity score lower than 50. 
+As we can see most of the 84 songs are above a popularity level of 50. Only 10 of the 84 songs have a popularity score lower than 50. 
+
+The Spotify API gives some insight on track-level features. The most interesting features are for this research are listed in the following table:
+
+| Feature          | Description                                                                    | Reason why interesting                                                                                                                                                 |
+|------------------|--------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Danceability     | How suitable a track is for dancing based on a combination of musical elements | A lot of TikTok trends involve dancing. So these songs might have a high danceability score.                                                                           |
+| Energy           | A perceptual measure of intensity and activity                                 | A lot of TikTok trends involve some powerful dances. Energetic songs feel fast, loud and noisy.                                                                        |
+| Loudness         | The overall loudness of a track in decibels (dB)                               |                                                                                                                                                                        |
+| Speechiness      | Detection of the presence of spoken words in a track                           | This can indicate whether a song is more rap like or more instrumental. The genre of the corpus is mainly pop / rap.                                                   |
+| Acousticness     | Measure of how acoustic a track is                                             |                                                                                                                                                                        |
+| Instrumentalness | Prediction if a track contains no vocals                                       | Expected to be a low number, since almost all songs have lyrics and people singing.                                                                                    |
+| Popularity       | Indicator of how popular a song is on Spotify                                  | TikTok popular songs do not per se have to be populair on Spotify.                                                                                                     |
+| Valence          | The musical positiveness conveyed by a track                                   | Expected to have high valence, because that indicates happy, cheerful and euphoric songs.                                                                              |
+| Tempo            | The overall estimated tempo of a track in beats per minute (BPM)               | TikTok trends involve a lot of dancing. Danceability includes the musical element of tempo, so it is expected to have a higher tempos with higher danceability scores. |
 
 ```{r}
 theme1 <- theme(panel.background = element_rect(fill = "white", color = "grey"))
@@ -161,7 +175,54 @@ ggplot(corpus, aes(x = valence, y = danceability)) +
        color = "Key")
 ```
 
-Danceability describes how suitable a track is for dancing, and valence describes the musical positiveness conveyed by a track. The 5 sings with a minority key do not seem to be outliers when looked at the danceability and valence. All songs have a danceability higher than 0.25. Valence has quite a decent distribution between $[0,1]$.
+Danceability describes how suitable a track is for dancing, and valence describes the musical positiveness conveyed by a track. The 5 songs with the keys D#, E and F# do not seem to be outliers in the Danceability VS Valence plot. All songs have a danceability higher than 0.25. Valence has quite a decent distribution between $[0,1]$.
 
+As pointed out earlier, the only classical song in the corpus is *Eine kleine Nachtmusik K.* - Wolfgang Amadeus.
+```{r}
+nachtmusik <- corpus %>%
+  filter(track.name == "Eine kleine Nachtmusik K. 525: Allegro")
+
+ggplot(corpus, aes(x = valence, y = danceability)) + 
+  geom_point() + 
+  geom_point(data = nachtmusik,
+             aes(x = valence, 
+                 y = danceability,
+                 color = track.name
+                 ),
+                 size = 3
+             )+
+  geom_text(aes(x = valence,
+                y = danceability,
+                label = label),
+            data = tibble(label = c("Classical piece"),
+                          valence = nachtmusik$valence,
+                          danceability = nachtmusik$danceability),
+            hjust = "left",
+            vjust = "bottom",
+            nudge_y = 0.02,
+            size = 3
+            ) + 
+  ylim(0,1.0) +
+  xlim(0,1.0) +
+  theme1 + theme(legend.position = "none")+
+  labs(title = "Danceability VS Valence",
+       x = "Valence",
+       y = "Danceability",
+       color = "Song")
+```
+```{r}
+ggplot(corpus, aes(x = key_name,
+                   y = loudness, 
+                   fill = key_name)) + 
+    geom_boxplot(outlier.size = 1)+
+  geom_point(color = "black",
+              size = 0.4, alpha = 0.9) + 
+  labs(title = "Distribution of loudness categorised by key",
+       x =  "Key",
+       y = "Loudness (dB)") + 
+  theme1+ 
+  theme(legend.position = "none",
+        axis.ticks.x = element_blank())
+```
 
 
