@@ -1,228 +1,30 @@
 ---
-title: "TikTok portfolio"
+title: "index.Rmd"
 author: "Anna Lau"
-date: "9-2-2021"
+date: "19-2-2021"
 output: html_document
 ---
 
-# Compmus
-Portfolio for the course Computational Musicology for BSc Kunstmatige Intelligentie.
-
-## The Corpus
-The corpus for this project is a playlist from Spotify. This playlists is a collection of songs that are famous from TikTok - a short-form video social media app. In these 15 seconds videos music is played and people lip-sync, dance and make music-driven memes. As the spaces people normally enjoy music were impacted by the pandamic, TikTok helped fill the need for communal musical experience all over the world. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from <https://tokboard.com/months>. If a song in the top 10 of the month was not available on Spotify the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
-
-I want to find out how different these popular TikTok songs are from one another. The genres of the songs are quite diverse. Maybe there is a factor that is a core element of becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out if the songs within a trend are the same/different. I.e. are all dance tiktok songs alike? How are alike are meme TikTok songs? etc. 
-
-### Natural groups
-Interesting comparison points in the corpus of this project will be the overall mood of a song. Psychologist Robert Thayer's came up with a traditional model of moood. Where songs can be categorised along the lines of energy and stess, from happy to sad and calm to energetic (Bhat et al 359). Next to these 4 categories there are also 4 sub categories e.g. Happy - energetic, Happy - calm, etc. The corpus has a lot of Happy, Energetic, Happy - Energetic and a few Happy - Calm and Calm songs. It is expected that the intensity for Energetic and Happy - Energetic songs are on the higher spectrum than Happy - Calm and Calm songs. Another musical component that can be looked at is the Timbre of a song. Timbre is the tonal quality of a piece created by harmonics. It is to no surprise that these will be different between moods as well. Happy, Happy - Energetic and Energetic songs will have around a medium timbre. Whereas Calm and Happy - Calm songs will most likely have a low timbre. The pitch intervals of the songs will probably vary quite a lot between the mood categories, as it is very dependent on the singer's voice, and the instruments that are used. Lastly the rhythm of songs with a Happy, Happy - Energetic and Energetic mood will most likely be high paced, whereas Calm and Calm - Happy somgs will have a more relaxed and slow rhythm. 
-
-### Level of representativeness  
-TikTok is a very creative platform where people use all kinds of remix songs which aren't accessible on Spotify although they are very popular songs. In the following table popular songs that were *not* listed on Spotify are shown.
-
-| Song Title                                | Month    | Rank |
-|-------------------------------------------|----------|:----:|
-| #hiteverybeat                             | March    | 3    |
-| Over it Chinese New year Remix by JohhnyG | March    | 4    |
-| 2liveSoundsmix                            | March    | 7    |
-| Original sound - KTM                      | March    | 9    |
-| Kanta Laga Mix                            | April    | 9    |
-| Original sound - Plks choudhary           | April    | 10   |
-| Cari Mama Muda                            | May      | 7    |
-| Kream bebiisan edition                    | May      | 8    |
-| original sound                            | May      | 11   |
-| ओरिजिनल साउंड                              | June     | 6    |
-| Gimme clout pls                           | June     | 7    |
-| Original sound                            | October  | 1    |
-| Viva La Swing                             | October  | 5    |
-| ... is sweaty                             | November | 8    |
-
-Some songs are listed multiple times in the top ten of the months, these are listed in the following table <br/>
-
-| Song Title                |         Months       | Repetition |
-|-------------------------- | :-------------------:|:----------:|
-| Savage                    |   Mar - Apr - May    |     3      |
-| Roses                     |      Mar - Apr       |     2      |
-| Laxed (Siren Beat)        |      Apr - May       |     2      |
-| Play Date                 |      Apr - May       |     2      |
-| Coño                      |      May - Jun       |     2      |
-| Love Story                |      Jul - Aug       |     2      | 
-| How you like that         |      Jul - Aug       |     2      |
-| WAP                       |      Aug - Sept      |     2      | 
-| Monkeys Spinning Monkeys  |Jul - Oct - Nov - Dec |     4      | 
-| Oh no                     |      Nov - Dec       |     2      | 
-| It's Tricky               |      Nov - Dec       |     2      | 
-| Classical Music           |   Aug - Oct - Nov    |     3      | 
-| Adderall                  |      Nov - Dec       |     2      |
-
-Lastly, a final note needs to be made on the length of the TikTok videos. These videos can only be up to 15 seconds long. However, in this research the full length of the songs are used. The motivation behind this is because 15 does not allow for a thoroughly and detailed analysis between the songs. 
-
-### Atypical songs in the corpus
-* *Eine kleine Nachtmusik K.* - Wolfgang Amadeus, stands out a lot from the rest. It is the only classical piece in the corpus and is composed in the year 1787. 
-* *Steven Universe* - L.Dre: one of the few slow paced songs, and it is only 2.14 minutes long  without lyrics. 
-* *Monkeys Spinning Monkeys* - Keving MacLeod, one of the few songs that have no lyrics also very short 
-* Funny to see that from December there are seasonal songs e.g. *All I Want for Christmas is You* - Mariah Carey and *Jinge Bell Rock* - Bobby Helms. 
-
-#### Note
-The Song Titles in the table are copied from the <https://tokboard.com/months> website
-
-# Visualisations
-```{r}
-library(tidyverse)
-library(spotifyr)
-```
-Loading playlists from monthly top 10 songs from TikTok March 2020 - December 2020
-```{r}
-mar <-get_playlist_audio_features("","0IIt2QOYxRawDHQbZ8ln3M") 
-apr <-get_playlist_audio_features("","0PTklfVTalxE8j6T9NYZEG") 
-may <-get_playlist_audio_features("","093VTj7Esn9nYiFQFoa1YH") 
-jun <-get_playlist_audio_features("","2F3YMerEwMjXn3A4S7es6H") 
-jul <-get_playlist_audio_features("","4U9w6uCKivCsRLHFyZgkxI") 
-aug <-get_playlist_audio_features("","3zvNyJbb9rjdF0vag2O5xG")
-sep <-get_playlist_audio_features("","2APegDsKij3yaL1ffG6Bz4") 
-oct <-get_playlist_audio_features("","4np9mWC6T4O8x7hoxTeUPP") 
-nov <-get_playlist_audio_features("","5xyKvHZIeWGAgWJ6ZEVm3H") 
-dec <-get_playlist_audio_features("","4n90Xr0lxy1yLhbzTAgzTx") 
-``` 
-```{r}
-corpus <- 
-  bind_rows(
-    mar %>% mutate(category = "Mar"),
-    apr %>% mutate(category = "Apr"),
-    may %>% mutate(category = "May"),
-    jun %>% mutate(category = "Jun"),
-    jul %>% mutate(category = "Jul"),
-    aug %>% mutate(category = "Aug"),
-    sep %>% mutate(category = "Sep"),
-    oct %>% mutate(category = "Oct"),
-    nov %>% mutate(category = "Nov"),
-    dec %>% mutate(category = "Dec")
-  )
-
-# Delete duplicate songs
-corpus <- corpus[!duplicated(corpus$track.name),]
-```
-That songs were populair on TikTok does not have to mean they are popular on Spotify. Let's find out. 
-```{r}
-corpus %>%
-  mutate(track.name = fct_reorder(track.name, track.popularity)) %>%
-  ggplot( aes(x=track.name, y=track.popularity)) +
-    geom_segment( aes(x = track.name,
-                      xend=track.name, 
-                      y = 0,
-                      yend=track.popularity)) +
-    geom_point( size=1, color="skyblue") +
-    coord_flip() +
-    xlab("") +
-    # facet_wrap(~category) + 
-    theme_minimal() +
-    theme(
-      axis.text.y = element_text(size = 4.5)
-    ) + 
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.border = element_blank(),
-    axis.ticks.y = element_blank()
-  )+ 
-  labs(title = "Corpus track popularity",
-       y = "Popularity",
-       x = "Track title")
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-As we can see most of the 84 songs are above a popularity level of 50. Only 10 of the 84 songs have a popularity score lower than 50. 
+## R Markdown
 
-The Spotify API gives some insight on track-level features. The most interesting features are for this research are listed in the following table:
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-| Feature          | Description                                                                    | Reason why interesting                                                                                                                                                 |
-|------------------|--------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Danceability     | How suitable a track is for dancing based on a combination of musical elements | A lot of TikTok trends involve dancing. So these songs might have a high danceability score.                                                                           |
-| Energy           | A perceptual measure of intensity and activity                                 | A lot of TikTok trends involve some powerful dances. Energetic songs feel fast, loud and noisy.                                                                        |
-| Loudness         | The overall loudness of a track in decibels (dB)                               |                                                                                                                                                                        |
-| Speechiness      | Detection of the presence of spoken words in a track                           | This can indicate whether a song is more rap like or more instrumental. The genre of the corpus is mainly pop / rap.                                                   |
-| Acousticness     | Measure of how acoustic a track is                                             |                                                                                                                                                                        |
-| Instrumentalness | Prediction if a track contains no vocals                                       | Expected to be a low number, since almost all songs have lyrics and people singing.                                                                                    |
-| Popularity       | Indicator of how popular a song is on Spotify                                  | TikTok popular songs do not per se have to be populair on Spotify.                                                                                                     |
-| Valence          | The musical positiveness conveyed by a track                                   | Expected to have high valence, because that indicates happy, cheerful and euphoric songs.                                                                              |
-| Tempo            | The overall estimated tempo of a track in beats per minute (BPM)               | TikTok trends involve a lot of dancing. Danceability includes the musical element of tempo, so it is expected to have a higher tempos with higher danceability scores. |
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r}
-theme1 <- theme(panel.background = element_rect(fill = "white", color = "grey"))
-
-ggplot(corpus, aes(x = key_name)) + 
-  geom_bar(fill = "skyblue") + theme1 + 
-  labs(title = "Distribution of keys in the corpus",
-       x = "Key",
-       y = "Frequency")
-
+```{r cars}
+summary(cars)
 ```
 
-Only one song is (according to Spotify) written in D#. This is the song *Bulletproof* - La Roux. 
-The key E and F# both have two songs categorised by Spotify. E has songs *Shh* - Young Fanatic and *Adderall (Corvette Corvette)* - Popp Hunna. F# has songs *Party Girl* - StaySolidRocky and *Girls in the Hood* - Megan Thee Stallion.
+## Including Plots
 
-```{r}
-different_keys <- corpus %>%
-  filter(key_name %in% c("D#", "E", "F#"))
-ggplot(corpus, aes(x = valence, y = danceability)) + 
-  geom_point() + 
-  geom_point(data = different_keys,
-             aes(x = valence, y = danceability, color = key_name),
-             size = 2) + 
-  ylim(0,1.0) +
-  xlim(0,1.0) +
-  theme1 + 
-  labs(title = "Danceability VS Valence",
-       x = "Valence",
-       y = "Danceability",
-       color = "Key")
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
 ```
 
-Danceability describes how suitable a track is for dancing, and valence describes the musical positiveness conveyed by a track. The 5 songs with the keys D#, E and F# do not seem to be outliers in the Danceability VS Valence plot. All songs have a danceability higher than 0.25. Valence has quite a decent distribution between $[0,1]$.
-
-As pointed out earlier, the only classical song in the corpus is *Eine kleine Nachtmusik K.* - Wolfgang Amadeus.
-```{r}
-nachtmusik <- corpus %>%
-  filter(track.name == "Eine kleine Nachtmusik K. 525: Allegro")
-
-ggplot(corpus, aes(x = valence, y = danceability)) + 
-  geom_point() + 
-  geom_point(data = nachtmusik,
-             aes(x = valence, 
-                 y = danceability,
-                 color = track.name
-                 ),
-                 size = 3
-             )+
-  geom_text(aes(x = valence,
-                y = danceability,
-                label = label),
-            data = tibble(label = c("Classical piece"),
-                          valence = nachtmusik$valence,
-                          danceability = nachtmusik$danceability),
-            hjust = "left",
-            vjust = "bottom",
-            nudge_y = 0.02,
-            size = 3
-            ) + 
-  ylim(0,1.0) +
-  xlim(0,1.0) +
-  theme1 + theme(legend.position = "none")+
-  labs(title = "Danceability VS Valence",
-       x = "Valence",
-       y = "Danceability",
-       color = "Song")
-```
-```{r}
-ggplot(corpus, aes(x = key_name,
-                   y = loudness, 
-                   fill = key_name)) + 
-    geom_boxplot(outlier.size = 1)+
-  geom_point(color = "black",
-              size = 0.4, alpha = 0.9) + 
-  labs(title = "Distribution of loudness categorised by key",
-       x =  "Key",
-       y = "Loudness (dB)") + 
-  theme1+ 
-  theme(legend.position = "none",
-        axis.ticks.x = element_blank())
-```
-
-
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

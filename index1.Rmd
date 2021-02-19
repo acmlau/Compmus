@@ -1,0 +1,71 @@
+---
+title: "Isn't that a TikTok song?"
+author: "Anna Lau"
+date: "9-2-2021"
+runtime: shiny
+# output: 
+  # flexdashboard::flex_dashboard:
+  # storyboard: true
+  # theme: plotly
+output: html_document
+  
+---
+```{r setup, include = FALSE}
+library(spotifyr)
+library(tidyverse)
+library(plotly)
+mar <-get_playlist_audio_features("","0IIt2QOYxRawDHQbZ8ln3M") 
+apr <-get_playlist_audio_features("","0PTklfVTalxE8j6T9NYZEG") 
+may <-get_playlist_audio_features("","093VTj7Esn9nYiFQFoa1YH") 
+jun <-get_playlist_audio_features("","2F3YMerEwMjXn3A4S7es6H") 
+jul <-get_playlist_audio_features("","4U9w6uCKivCsRLHFyZgkxI") 
+aug <-get_playlist_audio_features("","3zvNyJbb9rjdF0vag2O5xG")
+sep <-get_playlist_audio_features("","2APegDsKij3yaL1ffG6Bz4") 
+oct <-get_playlist_audio_features("","4np9mWC6T4O8x7hoxTeUPP") 
+nov <-get_playlist_audio_features("","5xyKvHZIeWGAgWJ6ZEVm3H") 
+dec <-get_playlist_audio_features("","4n90Xr0lxy1yLhbzTAgzTx") 
+
+corpus <- 
+  bind_rows(
+    mar %>% mutate(category = "Mar"),
+    apr %>% mutate(category = "Apr"),
+    may %>% mutate(category = "May"),
+    jun %>% mutate(category = "Jun"),
+    jul %>% mutate(category = "Jul"),
+    aug %>% mutate(category = "Aug"),
+    sep %>% mutate(category = "Sep"),
+    oct %>% mutate(category = "Oct"),
+    nov %>% mutate(category = "Nov"),
+    dec %>% mutate(category = "Dec")
+  )
+
+# Delete duplicate songs
+corpus <- corpus[!duplicated(corpus$track.name),]
+pop_sorted <- corpus[order(-corpus$track.popularity),]
+```
+
+Yeah that song I know! 
+======================================
+
+<!-- Column {.sidebar data-width=200} --> 
+<!-- ----------------------------------------- -->
+
+<!-- ```{r} -->
+<!-- # selectInput("ranking", label = "Popularity rank:", -->
+<!-- #             choices = seq(1,83), selected = 83) -->
+<!-- selectInput("n_breaks", label = "Number of bins:", -->
+<!--             choices = c(10, 20, 35, 50), selected = 20) -->
+<!-- ``` -->
+
+
+Column
+-------------------------------------------------
+
+### Yeah you've heard this before
+
+The corpus for this project is a playlist from Spotify. This playlists is a collection of songs that are famous from TikTok - a short-form video social media app. In these 15 seconds videos music is played and people lip-sync, dance and make music-driven memes. As the spaces people normally enjoy music were impacted by the pandamic, TikTok helped fill the need for communal musical experience all over the world. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from <https://tokboard.com/months>. If a song in the top 10 of the month was not available on Spotify the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
+
+I want to find out how different these popular TikTok songs are from one another. The genres of the songs are quite diverse. Maybe there is a factor that is a core element of becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out if the songs within a trend are the same/different. I.e. are all dance tiktok songs alike? How are alike are meme TikTok songs? etc. 
+
+
+
