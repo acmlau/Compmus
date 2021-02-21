@@ -5,12 +5,12 @@ date: "9-2-2021"
 # runtime: shiny
 output:
   flexdashboard::flex_dashboard:
-  storyboard: true
-  theme: plotly
+    storyboard: true
+    theme: flatly
 # output: html_document
   
 ---
-```{r setup, include = FALSE}
+```{r, echo = FALSE}
 library(spotifyr)
 library(tidyverse)
 library(plotly)
@@ -44,28 +44,87 @@ corpus <- corpus[!duplicated(corpus$track.name),]
 pop_sorted <- corpus[order(-corpus$track.popularity),]
 ```
 
-Yeah that song I know! 
-======================================
 
-<!-- Column {.sidebar data-width=200} --> 
-<!-- ----------------------------------------- -->
-
-<!-- ```{r} -->
-<!-- # selectInput("ranking", label = "Popularity rank:", -->
-<!-- #             choices = seq(1,83), selected = 83) -->
-<!-- selectInput("n_breaks", label = "Number of bins:", -->
-<!--             choices = c(10, 20, 35, 50), selected = 20) -->
-<!-- ``` -->
-
-
-Column
--------------------------------------------------
 
 ### Yeah you've heard this before
 
-The corpus for this project is a playlist from Spotify. This playlists is a collection of songs that are famous from TikTok - a short-form video social media app. In these 15 seconds videos music is played and people lip-sync, dance and make music-driven memes. As the spaces people normally enjoy music were impacted by the pandamic, TikTok helped fill the need for communal musical experience all over the world. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from <https://tokboard.com/months>. If a song in the top 10 of the month was not available on Spotify the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
+```{r}
+popularity_plot <- corpus %>%
+  mutate(track.name = fct_reorder(track.name, track.popularity)) %>%
+  ggplot(aes(x=track.name, y=track.popularity)) +
+    geom_segment( aes(x = track.name, xend=track.name, y = 0, yend=track.popularity)) +
+    geom_point( size=1, color="skyblue") +
+    coord_flip() +
+    xlab("") +
+    ylab("Popularity")+
+    theme_minimal() +
+    # theme(
+    #   
+    # ) + 
+  labs(title = "Corpus track popularity",
+       y = "Popularity",
+       x = "Track title")+
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.border = element_blank(),
+    axis.text.y = element_text(size = 4.5),
+    axis.ticks.y = element_blank(),
+    axis.ticks.x = element_blank(),
+  )
 
-I want to find out how different these popular TikTok songs are from one another. The genres of the songs are quite diverse. Maybe there is a factor that is a core element of becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out if the songs within a trend are the same/different. I.e. are all dance tiktok songs alike? How are alike are meme TikTok songs? etc. 
+ggplotly(popularity_plot)
+```
+
+***
+
+The corpus for this project is a playlist from Spotify. This playlists is a collection of songs that are famous from TikTok - a short-form video social media app. In these 15 seconds videos music is played and people lip-sync, dance and make music-driven memes. As the spaces people normally enjoy music were impacted by the pandamic, TikTok helped fill the need for communal musical experience all over the world. Hence the songs from the corpus will be the top 10 songs on TikTok from the beginning of the coronavirus pandemic (March 2020) till the end of 2020 (December 2020). The top songs are acquired from <https://tokboard.com/months>. If a song in the top 10 of the month was not available on Spotify the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
+<!-- I want to find out how different these popular TikTok songs are from one another. The genres of the songs are quite diverse. Maybe there is a factor that is a core element of becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out if the songs within a trend are the same/different. I.e. are all dance tiktok songs alike? How are alike are meme TikTok songs? etc.  -->
+
+That songs were popular on TikTok does not have to mean they are popular on Spotify. Let's explore the plot on the right. As we can see most of the 84 songs are above a popularity level of 50. Only 10 of the 84 songs have a popularity score lower than 50. 
 
 
+### Ain't that strange that I want to move my body to these songs. 
+```{r}
+dance_tracks <- c("What You Know Bout Love", "WAP (feat. Megan Thee Stallion)",
+          "Roses - Imanbek Remix", "Boss Bitch",
+          "You Got It", "Toosie Slide",
+          "Shower", "How You Like That",
+          "Supalonely", "Party Girl")
+dance_songs <- corpus %>%
+  filter(track.name %in% dance_tracks)
+
+ggplot(corpus, aes(x = danceability, y = energy, size = tempo)) +
+  geom_point() +
+  geom_point(data = dance_songs,
+             aes(x = danceability,
+                 y = energy,
+                 color = track.name,
+                 size = tempo
+                 )
+             )+
+  geom_rug(size = 0.1) +      # Add 'fringes' to show data distribution.
+  scale_x_continuous(         # Fine-tune the x axis.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
+    minor_breaks = NULL       # Remove 'minor' grid-lines.
+  ) +
+  scale_y_continuous(         # Fine-tune the y axis in the same way.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),
+    minor_breaks = NULL
+  ) +
+  theme_light()+
+  # ylim(0,1.0) +
+  # xlim(0,1.0) + 
+  labs(x = "Danceability",
+       y = "Energy",
+       size = "Tempo",
+       color = "Track")
+```
+
+***
+One of the biggest trends of TikTok are the *Viral Dances* almost everybody just had to learn. Here a graphic displays how danceable a track is. This is broken down into Danceability, Energy and Tempo features from the [Spotify API](https://developer.spotify.com).
+
+The majority of the tracks have a high danceability. This feature is partly based on a another feature tempo. The Energy feature is also plotted to measure the perceptual intensity and activity of a song. These are based o
+The coloured points are the top 10 ranked "dance" tracks from the previous page. As exp
 
