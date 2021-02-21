@@ -86,7 +86,7 @@ That songs were popular on TikTok does not have to mean they are popular on Spot
 ### Ain't that strange that I want to move my body to these songs. 
 ```{r}
 dance_tracks <- c("What You Know Bout Love", "WAP (feat. Megan Thee Stallion)",
-          "Roses - Imanbek Remix", "Boss Bitch",
+          "Roses - Imanbek Remix", "TKN (feat. Travis Scott)",
           "You Got It", "Toosie Slide",
           "Shower", "How You Like That",
           "Supalonely", "Party Girl")
@@ -123,8 +123,115 @@ ggplot(corpus, aes(x = danceability, y = energy, size = tempo)) +
 ```
 
 ***
-One of the biggest trends of TikTok are the *Viral Dances* almost everybody just had to learn. Here a graphic displays how danceable a track is. This is broken down into Danceability, Energy and Tempo features from the [Spotify API](https://developer.spotify.com).
+One of the biggest trends of TikTok are the *Viral Dances* almost everybody just had to learn. Here, a graphic displays how danceable a track is. This is broken down into Danceability, Energy and Tempo features from the [Spotify API](https://developer.spotify.com).
 
-The majority of the tracks have a high danceability. This feature is partly based on a another feature tempo. The Energy feature is also plotted to measure the perceptual intensity and activity of a song. These are based o
-The coloured points are the top 10 ranked "dance" tracks from the previous page. As exp
+To no surprise does the majority of the tracks have a high danceability as most TikTok songs are dance challenges. Zooming in into the top 10 dance songs, the coloured dots have a danceability mean of 0.78. It is on the higher side, but not the highest. The reason for this can be that these songs have a fairly easy choreography, so that everyone can enjoy dancing to them together on TikTok. Increasing the difficulty of a choreography would probably lower the popularity, as less people would be able to perform the dance. Tracks with a higher danceability score often not labelled as dance songs. The track with the lowest danceability score of 0.676 is *Steven Universe* - L.Dre which is a low-fi hiphop song often used as background music for the TikTok video. The track with the highest danceability score is used for a dance challenge trend on TikTok. 
+
+The track with the highest energy is *Mere Sapno Ki Rani - Tik Tok Remix* - from Eduardo Luzquiños ranked as penultimate of all songs in this corpus. There is no real trend linked to this song. 
+
+### Same but different 
+
+```{r}
+bananas <- corpus %>% 
+  filter(str_detect(corpus$track.name, "Banana"))
+
+library(compmus)
+
+## Conkarah, Shaggy
+banana_orig <-
+  get_tidy_audio_analysis("13OdVDwHdPlGkKHyjPoadB") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+## Conkarah, Shaggy, DJ Fle
+banana_remix <-
+  get_tidy_audio_analysis("0dZpw3h6KZhcHec61qwevZ") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+banana_dtw <- compmus_long_distance(
+  banana_orig  %>% mutate(pitches = map(pitches, compmus_normalise, "euclidean")),
+  banana_remix %>% mutate(pitches = map(pitches, compmus_normalise, "euclidean")),
+  feature = pitches,
+  method = "angular"
+) %>%
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_equal() +
+  labs(x = "Original", y = "Remix", title = "Banana song") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = NULL)
+
+banana_orig_chroma <- banana_orig %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Original Banana song") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+
+banana_remix_chroma <- banana_remix %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Remix Banana song") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:center;'>
+<div>
+<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
+<div>
+```{r}]
+
+ggplotly(banana_orig_chroma)
+```
+
+</div>
+<div>
+```{r}
+ggplotly(banana_remix_chroma)
+```
+</div>
+</div>
+</div>
+
+<div>
+```{r}
+ggplotly(banana_dtw)
+```
+
+</div>
+
+<div style="width = 120px">
+Plotted with Euclidean normalisation and angular distance. When listening to the songs, it does not seem like there is much difference between the two. Only the remix version is 26 seconds longer than the original Banana song and the last 17 seconds are silent. However, the Dynamic Time Warping of the chromagrams does not show that that the songs are the same.
+</div>
+
 
