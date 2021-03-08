@@ -136,24 +136,31 @@ corpus$trend = c("dance",
 
 ### Newest plots Homework week 9 
 
-
-
 ```{r}
-corpus %>%
+dance_counts <- corpus %>%
   mutate(trends = ifelse(trend == "dance", "dance", "other")) %>%
-  ggplot( aes(x = key_name)) + 
-  geom_bar(fill = "skyblue") + 
-  labs(title = "Distribution of keys in the corpus",
-       x = "Key",
-       y = "Frequency") + 
-  facet_wrap(~trends)
+  filter(trends == "dance")%>%
+    count(key_name) %>%
+      mutate(perc = n/sum(n), trends = "dance")
+  
+other_counts <- corpus %>%
+  mutate(trends = ifelse(trend == "dance", "dance", "other")) %>%
+  filter(trends == "other")%>%
+    count(key_name) %>%
+      mutate(perc = n/sum(n), trends = "other")
+
+rbind(dance_counts, other_counts) %>%
+  ggplot(aes(x = key_name, y = perc)) +
+    geom_bar(stat = "identity", fill = "skyblue") + 
+      facet_wrap(~trends)+
+        labs(title = "Distribution of keys in the corpus",
+             x = "Key",
+             y = "Normalised Frequency")
 ```
 
 ***
 
-* Make a hist
-* make a chordogram or keygram for outliers or archetypes in mu corpus
-* use variation (Sd) in loudness, tempo, or durations as a variable in one of your visualisations
+Given the trends in the corpus, these normalised histograms are made based on the key that was found by the Spotify API. Overall we can see that there is quite some similarity between the different trends. For example both both trends indicate that within the trend most songs have either a **C#** or a **G** key. Moreover the majority of the keys used in both trend categories are **A#**, **B**, **C**, **C#**, **G**, and **G#** which all have a score of higher than 0.075. The only huge dissimilarity between the trends that can be seen are within the key **D**: for "dance"-tracks there is a 0.1125 score for **D** whereas for "other"-tracks there is only a 0.023 score. 
 
 ### Homework 9 part two
 
@@ -274,7 +281,7 @@ savage <-
 ```{r}
 classical %>% 
   compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if desired
+    key_templates,         # Change to chord_templates if desired
     method = "angular",  # Try different distance metrics
     norm = "euclidean"     # Try different norms
   ) %>%
@@ -284,8 +291,18 @@ classical %>%
   geom_tile() +
   scale_fill_viridis_c(guide = "none") +
   theme_minimal() +
-  labs(x = "Time (s)", y = "")
+  labs(x = "Time (s)", y = "", title = "Eine Kleine Nachtmusik K. 525. Allegro - Mozart") + 
+  geom_hline(yintercept = "G:maj", color = "white") +
+  geom_hline(yintercept = "D:maj", color = "white")  + 
+  geom_hline(yintercept = "E:maj", color = "red")+
+  geom_vline(xintercept = 150, color = "white")+
+  geom_vline(xintercept = 195, color = "white")
 ```
+
+***
+
+Here we have a chordogram of the song *Eine kleine Nachtmusik K.* - Wolfgang Amadeus Mozart, which is an outlier in the corpus in the sense that it is the only classical piece in the corpus. On the [Wikipedia website](https://en.wikipedia.org/wiki/Eine_kleine_Nachtmusik) of this well-known song it states that this piece has four movements i.e. G major - D major - Ambiguous key - G major, which are indicated with horizontal white stripes. However, if we look in the chordogram we see that the piece is found to be written in Emajor, indicated with a horizontal red line. In harmony theory the Emajor key is most similar to **C#minor** but this chord isn't as dark as the Emajor one. Between time steps 150 - 195 (2:30 - 3:15)(the vertical white lines), we see that the keys F major, Eb major and F# minor are darker coloured. Maybe the spotify API did not estimate the chords well because of the instruments: string instruments. 
+
 
 ### Homeowork 9 part 3
 
@@ -302,10 +319,13 @@ savage %>%
   geom_tile() +
   scale_fill_viridis_c(guide = "none") +
   theme_minimal() +
-  labs(x = "Time (s)", y = "")
+  labs(x = "Time (s)", y = "", title = "Savage - Megan Thee Stallion") + 
+  geom_hline(yintercept = "Eb:min", colour = "white")
 ```
 
+*** 
 
+Throughout the entire song two chords are constantly played namely **Eb7** and **E7**. The **Eb7** chord is the most dark throughout the entire track on the chordogram. We can also see that the **E7** chord is every now and then dark. It is not strange that the **B7** is also darkly coloured throughout the almost the entire track because an as it is in harmony with the **E7** chord. 
 
 ### Yeah you've heard this song before, but where did it come from?
 The corpus for this project is a playlist from Spotify. [This playlists](https://open.spotify.com/playlist/5kQyvWFk8r1y2IQEtjBfey?si=HLNnUJzYQHSVYq7ub3lbRA) is a collection of songs that are famous from TikTok - a short-form video social media app. In these 15 seconds videos music is played and people lip-sync, dance and make music-driven memes. As the spaces people normally enjoy music were impacted by the pandamic, TikTok helped fill the need for communal musical experience all over the world. Starting from the beginning of the pandemic, March 2020, TikTok gained a lot of popularity. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from [this website](https://tokboard.com/months). If a song in the top 10 of the month was not available on Spotify the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
@@ -374,7 +394,7 @@ dance_tracks <- c("What You Know Bout Love", "WAP (feat. Megan Thee Stallion)",
 dance_songs <- corpus %>%
   filter(track.name %in% dance_tracks)
 
-danceVSenergy <- ggplot(corpus, aes(x = danceability, y = energy, size = tempo, color = trend)) +
+danceVSenergy <- ggplot(corpus, aes(x = danceability, y = energy, size = tempo)) +
   geom_point() +
   geom_point(data = dance_songs,
              aes(x = danceability,
@@ -407,6 +427,7 @@ danceVSenergy
 ```
 
 ***
+
 One of the biggest trends of TikTok are the *Viral Dances* almost everybody just had to learn. Here, a graphic displays how danceable a track is. This is broken down into Danceability, Energy and Tempo features from the [Spotify API](https://developer.spotify.com).
 
 To no surprise does the majority of the tracks have a high danceability as most TikTok songs are dance challenges. Zooming in into the top 10 dance songs, the coloured dots have a danceability mean of 0.78. It is on the higher side, but not the highest. The reason for this can be that these songs have a fairly easy choreography, so that everyone can enjoy dancing to them together on TikTok. Increasing the difficulty of a choreography would probably lower the popularity, as less people would be able to perform the dance. Tracks with a higher danceability score often not labelled as dance songs. The track with the lowest danceability score of 0.676 is *Steven Universe* - L.Dre which is a low-fi hiphop song often used as background music for the TikTok video. The track with the highest danceability score is used for a dance challenge trend on TikTok. 
@@ -581,6 +602,7 @@ Moving on to the second SSM. The song begins with a melody that contains no drum
 The 15 seconds used on TikTok are between 63 - 78 seconds (1:03 - 1:18), which is mostly used for a dance trend. This part is marked between two black lines(should I leave black?) on the two SSMs. For both SSM we see that the colour is not much different than the rest in the SSM. This indicates that the 15 seconds used for the TikTok resembles the entire song pretty well. 
 
 ### Okay but what about those 15 seconds, are they any different than the rest of the song? (pt. 2)
+
 ```{r}
 TKN <-
   get_tidy_audio_analysis("7eJMfftS33KTjuF7lTsMCx") %>% # Change URI.
@@ -647,7 +669,9 @@ grid.arrange(grobs = c(list(ssm_pitch), list(ssm_timbre)), layout_matrix = my_la
              top = textGrob("Death bed (coffee for your head) - Powfu, beabadoobee",gp=gpar(fontsize=20,font=3)))
 
 ```
+
 ### Okay but what about those 15 seconds, are they any different than the rest of the song? (pt. 3)
+
 ```{r}
 TKN <-
   get_tidy_audio_analysis("2kefHjNepGePZG4WxH2Vh4") %>% # Change URI.
