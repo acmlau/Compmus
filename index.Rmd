@@ -6,7 +6,8 @@ date: "9-2-2021"
 output:
   flexdashboard::flex_dashboard:
     storyboard: true
-    theme: flatly
+    theme: "default"
+    css: custom_theme.css
 # output: html_document
   
 ---
