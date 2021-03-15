@@ -7,8 +7,9 @@ output:
   flexdashboard::flex_dashboard:
     storyboard: true
     theme: "default"
-    # css: custom_theme.css
-    css: css2.css
+    css: css_storyboard.css
+    # logo: images/tiktok_logo.png
+    favicon: images/tiktok_logo.png
 # output: html_document
   
 ---
@@ -149,6 +150,27 @@ corpus %>%
 ***
 
 Histogram of tempo divided by TikTok trend (dance and other). 
+
+### Homework week 10 Tempogram
+
+```{r}
+rhythm_thief <- get_tidy_audio_analysis("78HutMlGCBJUIv6ckenQxV")
+```
+```{r}
+rhythm_thief_tempogram_yes_cyclic <- rhythm_thief %>%
+  tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) %>%
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)", title = "Rhythm Thief but Cursed - Headass") +
+  theme_classic()
+
+rhythm_thief_tempogram_yes_cyclic
+```
+
+*** 
+
+This is a very strange song which consists of random sounds put together. Surprisingly, the tempo stays very consistent throughout the entire track.
 
 ### Homework week 9 
 
