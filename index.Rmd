@@ -7,7 +7,8 @@ output:
   flexdashboard::flex_dashboard:
     storyboard: true
     theme: "default"
-    css: custom_theme.css
+    # css: custom_theme.css
+    css: css2.css
 # output: html_document
   
 ---
@@ -135,7 +136,21 @@ corpus$trend = c("dance",
 "dance")
 ```
 
-### Newest plots Homework week 9 
+
+### Homework week 10
+```{r}
+corpus %>%
+  mutate(trends = ifelse(trend == "dance", "dance", "other")) %>%
+  ggplot(aes(x = tempo)) +
+  geom_histogram() + 
+  facet_wrap(~trends)
+```
+
+***
+
+Histogram of tempo divided by TikTok trend (dance and other). 
+
+### Homework week 9 
 
 ```{r}
 dance_counts <- corpus %>%

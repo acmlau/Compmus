@@ -1,0 +1,84 @@
+.navbar-inverse {
+    background-color: #abd3e3;
+    #background-color: #1a242f;
+    border-color: transparent;
+}
+.section.sidebar {
+  top: 60px;
+  background-color: #abd3e3;
+}
+.bg-success {
+  background-color: #abd3e3;
+}
+.bg-primary {
+  background-color: rgba(191, 191, 191, 0.7);
+}
+.storyboard-nav .sbframelist { 
+  overflow : scroll; 
+}
+.storyboard-nav .sbframelist ul li {
+  transition: 0.3s;
+}
+.storyboard-nav .sbframelist ul li.active {
+  transition: 0.3s;
+}
+.storyboard-nav .sbframelist ul li.active {
+  #background-color: rgba(191, 191, 191, 0.7);
+  background-color: #abd3e3;
+  background-image: url('images/tiktok_logo.png');
+  background-repeat: no-repeat;
+  background-position: 100%;
+  background-size: 20%;
+  background-blend-mode: soft-light;
+}
+.storyboard-nav .sbframelist ul li:hover {
+  background-color: rgba(47, 71, 79, 0.7) !important;
+  color: white;
+}
+.storyboard-nav .sbframelist ul li.active:hover {
+  #background-color: rgba(44, 62, 80, 0.7);
+  background-color: #abd3e3 !important;
+  color: white;
+  #background-image: url('images/tiktok_logo.png');
+  background-image: url('images/tiktok_logo.png');
+  background-repeat: no-repeat;
+  background-position: 100%;
+  background-size: auto;
+  background-blend-mode: soft-light;
+}
+# tabBox
+.nav-tabs-custom > .nav-tabs > li.active {
+    background-color: #abd3e3 !important;
+    color: #fff;
+    # font-weight: 300;
+    # font-size: 14px;
+    # border-radius: 0;
+    # padding: 3px 10px 5px;
+    # text-transform: none;
+.nav-tabs-custom > .nav-tabs > li:hover > a {
+    background-color: rgba(47, 71, 79, 0.7) !important;
+    color: #fff;
+    # font-weight: 300;
+    # font-size: 14px;
+    # border-radius: 0;
+    # padding: 3px 10px 5px;
+    # text-transform: none;
+}
+.nav-tabs-custom > .nav-tabs > li.active > a {
+    background-color: #abd3e3 !important;
+    color: #fff;
+    # font-weight: 300;
+    # font-size: 14px;
+    # border-radius: 0;
+    # padding: 3px 10px 5px;
+    # text-transform: none;
+}
+.nav-tabs-custom > .nav-tabs > li.active:hover > a {
+    background-color: #abd3e3 !important;
+    color: #fff;
+    # font-weight: 300;
+    # font-size: 14px;
+    # border-radius: 0;
+    # padding: 3px 10px 5px;
+    # text-transform: none;
+}
