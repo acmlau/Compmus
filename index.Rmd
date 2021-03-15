@@ -137,19 +137,30 @@ corpus$trend = c("dance",
 "dance")
 ```
 
+### Homework week 10 - Tempogram
 
-### Homework week 10
 ```{r}
-corpus %>%
-  mutate(trends = ifelse(trend == "dance", "dance", "other")) %>%
-  ggplot(aes(x = tempo)) +
-  geom_histogram() + 
-  facet_wrap(~trends)
+play_date <- get_tidy_audio_analysis("4DpNNXFMMxQEKl7r0ykkWA")
+```
+```{r}
+play_date_cyclic <- play_date %>%
+  tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) %>%
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)", title = "Play Date - Melanie Martinez (Cyclic)") +
+  scale_x_continuous(breaks = seq(0,180, 30) ) + 
+  geom_vline(xintercept = 132, color = "white")+
+  geom_vline(xintercept = 136, color = "white")+
+  geom_vline(xintercept = 165, color = "white")+
+  theme_classic()
+
+play_date_cyclic
 ```
 
 ***
 
-Histogram of tempo divided by TikTok trend (dance and other). 
+The tempogram of the song *Play Date* by Melanie Martinez, shows that there are small tempo variations throughout the entire song. Very notable is the change in tempo between 132 - 136 seconds(2:12 - 2:16). The part in the song corresponding to this time frame is actually almost silent. It is surprising that Spotify labels this silent part to have a high tempo. At the end of this time frame slow beating comes in again, hence we see the yellow line in the time frame go down again. Once after we see that the tempo goes back to the usual. At the very end, the song slows down and fades out, this corresponds to the last few seconds where we see that the tempogram is slightly lighter again. 
 
 ### Homework week 10 Tempogram
 
@@ -172,26 +183,19 @@ rhythm_thief_tempogram_yes_cyclic
 
 This is a very strange song which consists of random sounds put together. Surprisingly, the tempo stays very consistent throughout the entire track.
 
-### Homework week 10 - Tempogram
-
+### Homework week 10
 ```{r}
-play_date <- get_tidy_audio_analysis("4DpNNXFMMxQEKl7r0ykkWA")
+corpus %>%
+  mutate(trends = ifelse(trend == "dance", "dance", "other")) %>%
+  ggplot(aes(x = tempo)) +
+  geom_histogram() + 
+  facet_wrap(~trends)
 ```
-```{r}
-play_date_cyclic <- play_date %>%
-  tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) %>%
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)", title = "Play Date - Melanie Martinez (Cyclic)") +
-  scale_x_continuous(breaks = seq(0,180, 30) ) + 
-  geom_vline(xintercept = 132, color = "white")+
-  geom_vline(xintercept = 136, color = "white")+
-  geom_vline(xintercept = 165, color = "white")+
-  theme_classic()
 
-play_date_cyclic
-```
+***
+
+Histogram of tempo divided by TikTok trend (dance and other). 
+
 
 ### Homework week 9 
 
