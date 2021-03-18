@@ -26,6 +26,30 @@ library(compmus)
 library(dplyr)
 library(devtools)
 library(tidyr)
+library(tidyverse)
+library(tidymodels)
+library(ggdendro)
+library(heatmaply)
+library(spotifyr)
+library(compmus)
+```
+
+```{r}
+get_conf_mat <- function(fit) {
+  outcome <- .get_tune_outcome_names(fit)
+  fit %>% 
+    collect_predictions() %>% 
+    conf_mat(truth = outcome, estimate = .pred_class)
+}  
+
+get_pr <- function(fit) {
+  fit %>% 
+    conf_mat_resampled() %>% 
+    group_by(Prediction) %>% mutate(precision = Freq / sum(Freq)) %>% 
+    group_by(Truth) %>% mutate(recall = Freq / sum(Freq)) %>% 
+    ungroup() %>% filter(Prediction == Truth) %>% 
+    select(class = Prediction, precision, recall)
+} 
 ```
 ```{r}
 mar <-get_playlist_audio_features("","0IIt2QOYxRawDHQbZ8ln3M") 
@@ -143,6 +167,185 @@ corpus$trend = c("dance",
 "dance")
 ```
 
+```{r}
+corpus <- corpus %>%
+  mutate(trends = ifelse(trend == "dance", "Dance", "Other"))
+```
+### Okay... So is there anything specific about these trends? Tell me what is the *trend* of this TikTok song?
+
+```{r}
+corpus_features <-
+  corpus %>%  # For your portfolio, change this to the name of your corpus.
+  add_audio_analysis() %>% 
+  mutate(
+    playlist = factor(trends),
+    segments = map2(segments, key, compmus_c_transpose),
+    pitches =  map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      ),
+    timbre =
+      map(
+        segments,
+        compmus_summarise, timbre,
+        method = "mean",
+      )
+  ) %>%
+  mutate(pitches = map(pitches, compmus_normalise, "clr")) %>%
+  mutate_at(vars(pitches, timbre), map, bind_rows) %>%
+  unnest(cols = c(pitches, timbre))
+```
+```{r}
+corpus_recipe <-
+  recipe(
+    playlist ~
+      danceability +
+      energy +
+      loudness +
+      speechiness +
+      acousticness +
+      instrumentalness +
+      liveness +
+      valence +
+      tempo +
+      duration +
+      C + `C#|Db` + D + `D#|Eb` +
+      E + `F` + `F#|Gb` + G +
+      `G#|Ab` + A + `A#|Bb` + B +
+      c01 + c02 + c03 + c04 + c05 + c06 +
+      c07 + c08 + c09 + c10 + c11 + c12,
+    data = corpus_features,          # Use the same name as the previous block.
+  ) %>%
+  step_center(all_predictors()) %>%
+  step_scale(all_predictors())      # Converts to z-scores.
+  # step_range(all_predictors())    # Sets range to [0, 1].
+```
+```{r}
+corpus_cv <- corpus_features %>% vfold_cv(5)
+```
+```{r}
+knn_model <-
+  nearest_neighbor(neighbors = 1) %>%
+  set_mode("classification") %>% 
+  set_engine("kknn")
+corpus_knn <- 
+  workflow() %>% 
+  add_recipe(corpus_recipe) %>% 
+  add_model(knn_model) %>% 
+  fit_resamples(
+    corpus_cv, 
+    control = control_resamples(save_pred = TRUE)
+  )
+```
+```{r}
+# corpus_knn %>% get_conf_mat()
+```
+```{r}
+corpus_knn %>% get_conf_mat() %>% autoplot(type = "mosaic")
+```
+
+***
+
+So yeah we cannot really predict what songs are supposed to fall into the *Dance* category and which fall into the *Other* category.
+
+
+### Wow I cannot choose man, help me grow this tree and maybe we can figure it out.
+
+```{r}
+tree_model <-
+  decision_tree() %>%
+  set_mode("classification") %>% 
+  set_engine("C5.0")
+corpus_tree <- 
+  workflow() %>% 
+  add_recipe(corpus_recipe) %>% 
+  add_model(tree_model) %>% 
+  fit_resamples(
+    corpus_cv, 
+    control = control_resamples(save_pred = TRUE)
+  )
+
+# corpus_tree %>% get_pr()
+```
+
+```{r}
+# workflow() %>%
+#   add_recipe(corpus_recipe) %>%
+#   add_model(tree_model) %>%
+#   fit(corpus_features) %>%
+#   pluck("fit", "fit", "fit") %>%
+#   summary()
+```
+
+```{r}
+forest_model <-
+  rand_forest() %>%
+  set_mode("classification") %>% 
+  set_engine("ranger", importance = "impurity")
+corpus_forest <- 
+  workflow() %>% 
+  add_recipe(corpus_recipe) %>% 
+  add_model(forest_model) %>% 
+  fit_resamples(
+    corpus_cv, 
+    control = control_resamples(save_pred = TRUE)
+  )
+```
+
+```{r}
+# corpus_forest %>% get_pr()
+```
+
+```{r}
+# workflow() %>%
+#   add_recipe(corpus_recipe) %>%
+#   add_model(forest_model) %>%
+#   fit(corpus_features) %>%
+#   pluck("fit", "fit", "fit") %>%
+#   ranger::importance() %>%
+#   enframe() %>%
+#   mutate(name = fct_reorder(name, value)) %>%
+#   ggplot(aes(name, value)) +
+#   geom_col() +
+#   coord_flip() +
+#   theme_minimal() +
+#   labs(x = NULL, y = "Importance")
+```
+```{r}
+ac_12 <-corpus_features %>%
+  ggplot(aes(x = acousticness, y = c12, colour = playlist, size = energy)) +
+  geom_point(alpha = 0.8) +
+  scale_color_viridis_d() +
+  labs(
+    x = "Acousticness",
+    y = "12th Timbre component",
+    size = "Energy",
+    colour = "Playlist",
+    title = "Higest importance"
+  )
+temp_10 <- corpus_features %>%
+  ggplot(aes(x = tempo, y = c10, colour = playlist, size = energy)) +
+  geom_point(alpha = 0.8) +
+  scale_color_viridis_d() +
+  labs(
+    x = "tempo",
+    y = "10th Timbre component",
+    size = "Energy",
+    colour = "Playlist",
+    title= "Lowest importance"
+  )
+
+my_layout <- rbind(c(1,2), c(1,2))
+
+grid.arrange(grobs = c(list(ac_12), list(temp_10)), layout_matrix = my_layout,
+             top = textGrob("Random forest",gp=gpar(fontsize=10,font=3)))
+```
+
+
+*** 
+
+Excepted to have *Highest importance* plot to have **more distinction** between the two trends *Dance* and *Other*. For the *Lowest importance* plot excepted to have  **no distinction** between the two trends. 
+
 ### Homework week 10 - Tempogram
 
 ```{r}
@@ -192,14 +395,14 @@ This is a very strange song which consists of random sounds put together. Surpri
 ### Pump the beat! If the **tempo** is too slow I don't want to dance.
 ```{r}
 corpus %>%
-  mutate(trends = ifelse(trend == "dance", "Dance", "Other")) %>%
+  # mutate(trends = ifelse(trend == "dance", "Dance", "Other")) %>%
   ggplot(aes(x = tempo)) +
   geom_histogram(binwidth = 1, fill = "skyblue") +
   facet_wrap(~trends) +
   scale_x_continuous(breaks = seq(60, 180, 30))+ 
   # geom_vline(xintercept = 120, color = "black")+
   # geom_vline(xintercept = 122, color = "black")+
-  labs(x = "Tempo (BPM)", y = "Frequency")
+  labs(x = "Tempo (BPM)", y = "Frequency") + theme_light()
 
 # corpus %>%
 #   mutate(trends = ifelse(trend == "dance", "Dance", "Other")) %>%
@@ -218,16 +421,14 @@ So do the dance song satisfy our expectations? For the dance songs we'd assume t
 
 ```{r}
 dance_counts <- corpus %>%
-  mutate(trends = ifelse(trend == "dance", "dance", "other")) %>%
-  filter(trends == "dance")%>%
+  filter(trends == "Dance")%>%
     count(key_name) %>%
-      mutate(perc = n/sum(n), trends = "dance")
+      mutate(perc = n/sum(n), trends = "Dance")
   
 other_counts <- corpus %>%
-  mutate(trends = ifelse(trend == "dance", "dance", "other")) %>%
-  filter(trends == "other")%>%
+  filter(trends == "Other")%>%
     count(key_name) %>%
-      mutate(perc = n/sum(n), trends = "other")
+      mutate(perc = n/sum(n), trends = "Other")
 
 rbind(dance_counts, other_counts) %>%
   ggplot(aes(x = key_name, y = perc)) +
@@ -235,7 +436,7 @@ rbind(dance_counts, other_counts) %>%
       facet_wrap(~trends)+
         labs(title = "Distribution of keys in the corpus",
              x = "Key",
-             y = "Normalised Frequency")
+             y = "Normalised Frequency") + theme_light()
 ```
 
 ***
@@ -408,9 +609,9 @@ savage %>%
 Throughout the entire song two chords are constantly played namely **Eb7** and **E7**. The **Eb7** chord is the most dark throughout the entire track on the chordogram. We can also see that the **E7** chord is every now and then dark. It is not strange that the **B7** is also darkly coloured throughout the almost the entire track because an as it is in harmony with the **E7** chord. 
 
 ### Yeah you've heard this song before, but where did it come from?
-The corpus for this project is a playlist from Spotify. [This playlists](https://open.spotify.com/playlist/5kQyvWFk8r1y2IQEtjBfey?si=HLNnUJzYQHSVYq7ub3lbRA) is a collection of songs that are famous from TikTok - a short-form video social media app. In these 15 seconds videos music is played and people lip-sync, dance and make music-driven memes. As the spaces people normally enjoy music were impacted by the pandemic, TikTok helped fill the need for communal musical experience all over the world. Starting from the beginning of the pandemic, March 2020, TikTok gained a lot of popularity. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from [this website](https://tokboard.com/months). If a song in the top 10 of the month was not available on Spotify the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
+The corpus for this project is a playlist from Spotify. [This playlists](https://open.spotify.com/playlist/5kQyvWFk8r1y2IQEtjBfey?si=HLNnUJzYQHSVYq7ub3lbRA) is a collection of songs that are famous from TikTok - a social media app used to make short-form videos. In these 15 seconds videos, music is played and people dance, lip-sync, tell stories, make humorous memes, and do all other kinds of trends. As the spaces people normally enjoy music were impacted by the pandemic, TikTok helped fill the need for communal musical experience all over the world. Starting from the beginning of the pandemic, March 2020, TikTok gained a lot of popularity. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from [this website](https://tokboard.com/months). 
 
-I want to find out how different these popular TikTok songs are from one another. The genres of the songs are quite diverse. Maybe there is a factor that is a core element of becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out if the songs within a trend are the same/different. The majority of the songs are associated with dance challenges, hence these songs are categorised under the *Dance* trend. All the other trends are referenced as *Other*.
+I want to find out how different these popular TikTok songs are from one another. The genres of the songs are quite diverse. Maybe there is a factor that is a core element of becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out what the similarities and differences are within a trend. More specifically I will be focusing on the *Dance* trend as that is the biggest on TikTok.
 
 Interesting comparison points in the corpus of this project will be the overall mood of a song. Psychologist Robert Thayer's came up with a traditional model of mood. Where songs can be categorised along the lines of energy and stress, from happy to sad and calm to energetic (Bhat et al 359). Next to these 4 categories there are also 4 sub categories e.g. Happy - energetic, Happy - calm, etc. I assume the corpus has a lot of Happy, Energetic, Happy - Energetic and a few Happy - Calm and Calm songs. The reason for that is because many songs are for funny and trendy TikTok-challenges. It is expected that the intensity for Energetic and Happy - Energetic songs are on the higher spectrum than Happy - Calm and Calm songs. Another musical component that can be looked at is the Timbre of a song. Timbre is the tonal quality of a piece created by harmonics. It is to no surprise that these will be different between moods as well. Happy, Happy - Energetic and Energetic songs will have around a medium timbre. Whereas Calm and Happy - Calm songs will most likely have a low timbre. The pitch intervals of the songs will probably vary quite a lot between the mood categories, as it is very dependent on the singer's voice, and the instruments that are used. Lastly the rhythm of songs with a Happy, Happy - Energetic and Energetic mood will most likely be high paced, whereas Calm and Calm - Happy songs will have a more relaxed and slow rhythm. 
 
@@ -468,6 +669,11 @@ The Song Titles in the table are copied from [the website](https://tokboard.com/
 Here is the playlist that represents the corpus:
 <iframe src="https://open.spotify.com/embed/playlist/5kQyvWFk8r1y2IQEtjBfey" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
+**Making the playlist**
+If a song in the top 10 of the month was not available on Spotify, the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
+
+**Setting up the trends per song**
+The majority of the songs are associated with dance challenges, hence these songs are categorised under the *Dance* trend. All the other trends are referenced as *Other*.
 
 ### Ain't that strange that I want to move my body to these songs. 
 ```{r}
@@ -518,6 +724,37 @@ One of the biggest trends of TikTok are the *Viral Dances* almost everybody just
 To no surprise does the majority of the tracks have a high danceability as most TikTok songs are dance challenges. Zooming in into the top 10 dance songs, the coloured dots have a danceability mean of 0.78. It is on the higher side, but not the highest. The reason for this can be that these songs have a fairly easy choreography, so that everyone can enjoy dancing to them together on TikTok. Increasing the difficulty of a choreography would probably lower the popularity, as less people would be able to perform the dance. Tracks with a higher danceability score often not labelled as dance songs. The track with the lowest danceability score of 0.676 is *Steven Universe* - L.Dre which is a low-fi hiphop song often used as background music for the TikTok video. The track with the highest danceability score is used for a dance challenge trend on TikTok. 
 
 The track with the highest energy is *Mere Sapno Ki Rani - Tik Tok Remix* - from Eduardo Luzquiños ranked as penultimate of all songs in this corpus. There is no real trend linked to this song. 
+
+### Are you in the *mood*, because I certainly am.
+
+```{r}
+ggplot(corpus, aes(x = energy, y = valence, shape = trends)) + 
+  geom_point(aes(shape = trends, color = trends)) + 
+  scale_color_manual(values = c("#9FBEE1", "#1E3D60"))+
+  theme_light() +
+   scale_x_continuous(         # Fine-tune the x axis.
+    limits = c(0, 1),
+    breaks = c(0, 0.5, 1),   # Use grid-lines for quadrants only.
+    minor_breaks = NULL       # Remove 'minor' grid-lines.
+  ) +
+  scale_y_continuous(         # Fine-tune the y axis in the same way.
+    limits = c(0, 1),
+    breaks = c(0, 0.5, 1),
+    minor_breaks = NULL
+  ) +
+  geom_vline(xintercept = 0.5, linetype="dotted", color = "black", alpha = 0.7) + 
+  geom_hline(yintercept = 0.5, linetype="dotted", color = "black", alpha = 0.7) + 
+  annotate("text", 0.05, 0.05, label = "Sad", color = "black", alpha = 0.7, fontface="bold") +
+  annotate("text", 0.05, 0.95, label = "Angry", color = "black", alpha = 0.7, fontface="bold") +
+  annotate("text", 0.95, 0.05, label = "Calm", color = "black", alpha = 0.7, fontface="bold") +
+  annotate("text", 0.95, 0.95, label = "Happy", color = "black", alpha = 0.7, fontface="bold") +
+  labs(x = "Energy", y = "Valence", title = "The mood of the song", shape = "Trends", color = "Trends")
+```
+
+***
+
+Here follows a analysis of this plot
+
 
 ### #bananadrop Where did my sunglasses go? 
 
@@ -605,6 +842,7 @@ grid.arrange(grobs = c(list(banana_orig_chroma, banana_remix_chroma), list(banan
 
 
 ***
+
 
 Plotted with Euclidean normalisation and angular distance. When listening to the songs, it does not seem like there is much difference between the two. Only the remix version is 26 seconds longer than the original Banana song and the last 17 seconds are silent. However, the Dynamic Time Warping of the chromagrams does not show that that the songs are the same.   
 
@@ -825,15 +1063,3 @@ grid.arrange(grobs = c(list(ssm_pitch), list(ssm_timbre)), layout_matrix = my_la
 ```
 
 ### Conclusion
-
-<!-- **Check out all those cool variables! We're going to explore three of them today, starting with *speechiness*.** -->
-
-<!-- The Spotify ["Get Audio Features"](https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/) page says that speechiness refers to the presence of spoken words in a song. Songs with a speechiness score between 0.33 and 0.66 contain both music and speech; they could be rap songs, for example. Based on this, we're going to look at speechiness based on the difference between the speechiness score and 0.33. If the difference is above 0, it's most likely a rap song. The farther below 0, the more instrumental the track is. -->
-
-<!-- "Yes Indeed" by Lil Baby and Drake has the highest speechiness of any song on all four playlists: -->
-
-<!-- <iframe src="https://open.spotify.com/embed/track/6vN77lE9LK6HP2DewaN6HZ" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> -->
-
-<!-- "殘缺的彩虹" by Cheer Chen has the lowest speechiness: -->
-
-<!-- <iframe src="https://open.spotify.com/embed/track/0SvqolKhBNM7WVEXJGLIMO" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> -->
