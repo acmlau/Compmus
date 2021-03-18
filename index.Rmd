@@ -189,18 +189,29 @@ rhythm_thief_tempogram_yes_cyclic
 
 This is a very strange song which consists of random sounds put together. Surprisingly, the tempo stays very consistent throughout the entire track.
 
-### Homework week 10
+### Pump the beat! If the **tempo** is too slow I don't want to dance.
 ```{r}
 corpus %>%
-  mutate(trends = ifelse(trend == "dance", "dance", "other")) %>%
+  mutate(trends = ifelse(trend == "dance", "Dance", "Other")) %>%
   ggplot(aes(x = tempo)) +
-  geom_histogram() + 
-  facet_wrap(~trends)
+  geom_histogram(binwidth = 1, fill = "skyblue") +
+  facet_wrap(~trends) +
+  scale_x_continuous(breaks = seq(60, 180, 30))+ 
+  # geom_vline(xintercept = 120, color = "black")+
+  # geom_vline(xintercept = 122, color = "black")+
+  labs(x = "Tempo (BPM)", y = "Frequency")
+
+# corpus %>%
+#   mutate(trends = ifelse(trend == "dance", "Dance", "Other")) %>%
+#   ggplot(aes(x = tempo)) +
+#   geom_histogram(binwidth = 2, fill = "skyblue") +
+#   facet_wrap(~trends) +
+#   labs(x = "Tempo (BPM)", y = "Frequency")
 ```
 
 ***
 
-Histogram of tempo divided by TikTok trend (dance and other). 
+So do the dance song satisfy our expectations? For the dance songs we'd assume that the beat would be around 110-130 BPM. The majority of the dance songs fall within the tempo range of 110-130 BPM. 
 
 
 ### Homework week 9 
