@@ -29,6 +29,7 @@ library(tidyr)
 library(tidyverse)
 library(tidymodels)
 library(ggdendro)
+library(ggalt)
 library(heatmaply)
 library(spotifyr)
 library(compmus)
@@ -171,6 +172,44 @@ corpus$trend = c("dance",
 corpus <- corpus %>%
   mutate(trends = ifelse(trend == "dance", "Dance", "Other"))
 ```
+
+<!-- ### You think you popular huh? -->
+```{r}
+# popularity_plot <- corpus %>%
+#   mutate(track.name = fct_reorder(track.name, track.popularity)) %>%
+#   ggplot(aes(x=track.name, y=track.popularity)) +
+#     geom_segment( aes(x = track.name, xend=track.name, y = 0, yend=track.popularity)) +
+#     geom_point( size=1, color="skyblue") +
+#     coord_flip() +
+#     xlab("") +
+#     ylab("Popularity")+
+#     theme_minimal() +
+#     # theme(
+#     #   
+#     # ) + 
+#   labs(title = "Corpus track popularity",
+#        y = "Popularity",
+#        x = "")+
+#   theme(
+#     panel.grid.major.y = element_blank(),
+#     panel.border = element_blank(),
+#     axis.text.y = element_text(size = 4.5),
+#     axis.ticks.y = element_blank(),
+#     axis.ticks.x = element_blank(),
+#   )
+# 
+# popularity_plot
+```
+```{r}
+corpus<- corpus %>% mutate(poprange = case_when(
+    between(track.popularity, 0, 50) ~ "Low",
+    between(track.popularity, 51, 75) ~ "Middle",
+    between(track.popularity, 76, 100) ~ "High",
+    TRUE ~ NA_character_
+  ))
+```
+
+
 ### Okay... So is there anything specific about these trends? Tell me what is the *trend* of this TikTok song?
 
 ```{r}
@@ -312,6 +351,13 @@ corpus_forest <-
 #   labs(x = NULL, y = "Importance")
 ```
 ```{r}
+what <- corpus_features %>%
+  filter(playlist == "Dance") 
+
+
+gaa <- corpus_features %>%
+  filter(playlist == "Other")
+
 ac_12 <-corpus_features %>%
   ggplot(aes(x = acousticness, y = c12, colour = playlist, size = energy)) +
   geom_point(alpha = 0.8) +
@@ -322,9 +368,12 @@ ac_12 <-corpus_features %>%
     size = "Energy",
     colour = "Playlist",
     title = "Higest importance"
-  )
+  ) + 
+  geom_encircle(aes(group = playlist))
+
+
 temp_10 <- corpus_features %>%
-  ggplot(aes(x = tempo, y = c10, colour = playlist, size = energy)) +
+  ggplot(aes(x = E, y = F, colour = playlist, size = energy)) +
   geom_point(alpha = 0.8) +
   scale_color_viridis_d() +
   labs(
@@ -333,7 +382,8 @@ temp_10 <- corpus_features %>%
     size = "Energy",
     colour = "Playlist",
     title= "Lowest importance"
-  )
+  ) + 
+  geom_encircle(aes(group = playlist))
 
 my_layout <- rbind(c(1,2), c(1,2))
 
@@ -344,7 +394,12 @@ grid.arrange(grobs = c(list(ac_12), list(temp_10)), layout_matrix = my_layout,
 
 *** 
 
-Excepted to have *Highest importance* plot to have **more distinction** between the two trends *Dance* and *Other*. For the *Lowest importance* plot excepted to have  **no distinction** between the two trends. 
+| Class | Precision | Recall |
+|-------|-----------|--------|
+| Dance | 0.590     | 0.750  |
+| Other | 0.593     | 0.410  |
+
+Expected *Highest importance* plot to have **more distinction** between the two trends *Dance* and *Other*. For the *Lowest importance* plot excepted to have  **no distinction** between the two trends. However, as you can see bu the encircled parts. there is a lot of overlap between *Dance* and *Other*, hence this classification does not really work, despite having relatively high importance for Acoustiness and the 12th timbre component (bove above a score of 2.0). However from the table we can also see that the classification model did not managed to find a pattern that makes tracks specifically a Dance or Other song. 
 
 ### Homework week 10 - Tempogram
 
@@ -667,7 +722,7 @@ The Song Titles in the table are copied from [the website](https://tokboard.com/
 ***
 
 Here is the playlist that represents the corpus:
-<iframe src="https://open.spotify.com/embed/playlist/5kQyvWFk8r1y2IQEtjBfey" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+<iframe src="https://open.spotify.com/embed/playlist/5kQyvWFk8r1y2IQEtjBfey" width="280" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
 **Making the playlist**
 If a song in the top 10 of the month was not available on Spotify, the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
