@@ -866,8 +866,8 @@ classical %>%
   geom_hline(yintercept = "D:maj", color = "white")  +
   geom_hline(yintercept = "C:min", color = "red", alpha = 0.5)+
   geom_hline(yintercept = "E:maj", color = "red")+
-  geom_vline(xintercept = 150, color = "white")+
-  geom_vline(xintercept = 195, color = "white") + 
+  # geom_vline(xintercept = 150, color = "white")+
+  # geom_vline(xintercept = 195, color = "white") + 
   geom_segment(aes(x =150, xend = 195, y="F:maj", yend= "F:maj"), col = 'orange') +
   geom_segment(aes(x =150, xend = 195, y="Eb:maj", yend= "Eb:maj"), col = 'orange') + 
   geom_segment(aes(x =150, xend = 195, y="F#:min", yend= "F#:min"), col = 'orange')
@@ -953,9 +953,9 @@ grid.arrange(key_hist, what, nrow =2, ncol = 1)
 
 Zooming out from the *Eine Kleine Nachtmusik K. 525. Allegro* track, let's have a look at the over usage of keys in the corpus. Given the trends in the corpus, these normalised histograms are made based on the key that was found by the Spotify AP, which can be seen on the first row. 
 
-Overall we can see that there is quite some similarity between the different trends. For example both trends indicate that within the trend most songs have either a C# or a G key. Moreover the majority of the keys used in both trend categories are A#, B, C, C#, G, and G# which all have a score of higher than 0.075 (purple line). The only huge dissimilarity between the trends that can be seen are within the key D: Dance tracks have a score of 0.1125 score whereas for Other tracks have only a 0.023 score. So just like the features Valence, Energy and Danceability from our emotions graph, the Key feature also doesn't really show that there is a clear distinction between the two trends. 
+Overall we can see that there is quite some similarity between the different trends. For example both trends indicate that within the trend most songs have either a C# or a G key. Moreover the majority of the keys used in both trend categories are A#, B, C, C#, G, and G# which all have a score of higher than 0.075 (purple line). The only huge dissimilarity between the trends that can be seen are within the key D: Dance tracks have a score of 0.1125 score whereas for Other tracks have only a 0.023 score. So just like the features Valence, Energy and Danceability from our emotions graph, the **Key** feature also has **no clear distinction** between the two trends. 
 
-Luckily, there are still some other features available. The second row of plot shows a histogram of the different tempos in the corpus split up by trend. In general, the majority of the songs should be around [the preferred tempo](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.465.8019&rep=rep1&type=pdf) of 120-130 BPM. For both plots the mean is indicated with a purple line along with the respective mean of tempo. Although the means are quite close to one another, the distribution is quite different. We can see that the Dance tracks have a distribution similar to a Normal distribution. The Other tracks are more uniformly distributed.
+Luckily, there are still some other features available. The second row of plot shows a histogram of the different tempos in the corpus split up by trend. In general, the majority of the songs should be around [the preferred tempo](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.465.8019&rep=rep1&type=pdf) of 120-130 BPM. For both plots the mean is indicated with a purple line along with the respective mean of tempo. Although the means are quite close to one another, the distribution is quite different. We can see that the Dance tracks have a distribution similar to a Normal distribution. The Other tracks are more uniformly distributed. This means that we have found our **first difference** based on **tempo** between the two trends! 
 
 
 ### Conclusion
