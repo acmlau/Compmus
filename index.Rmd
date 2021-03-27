@@ -669,8 +669,8 @@ I want to find out how different these popular TikTok songs are from one another
 
 <!-- Interesting comparison points in the corpus of this project will be the overall mood of a song. Psychologist Robert Thayer's came up with a traditional model of mood. Where songs can be categorised along the lines of energy and stress, from happy to sad and calm to energetic (Bhat et al 359). Next to these 4 categories there are also 4 sub categories e.g. Happy - energetic, Happy - calm, etc. I assume the corpus has a lot of Happy, Energetic, Happy - Energetic and a few Happy - Calm and Calm songs. The reason for that is because many songs are for funny and trendy TikTok-challenges. It is expected that the intensity for Energetic and Happy - Energetic songs are on the higher spectrum than Happy - Calm and Calm songs. Another musical component that can be looked at is the Timbre of a song. Timbre is the tonal quality of a piece created by harmonics. It is to no surprise that these will be different between moods as well. Happy, Happy - Energetic and Energetic songs will have around a medium timbre. Whereas Calm and Happy - Calm songs will most likely have a low timbre. The pitch intervals of the songs will probably vary quite a lot between the mood categories, as it is very dependent on the singer's voice, and the instruments that are used. Lastly the rhythm of songs with a Happy, Happy - Energetic and Energetic mood will most likely be high paced, whereas Calm and Calm - Happy songs will have a more relaxed and slow rhythm.  -->
 
-<details
-
+<details>
+<summary>Specification of the corpus selection</summary>
 TikTok is a very creative platform where people use all kinds of remix songs which aren't accessible on Spotify although they are very popular songs. In the following table popular songs that were *not* listed on Spotify are shown.
 
 | Song Title                                | Month    | Rank |
@@ -708,6 +708,8 @@ Some songs are listed multiple times in the top ten of the months, these are lis
 | Classical Music           |   Aug - Oct - Nov    |     3      | 
 | Adderall                  |      Nov - Dec       |     2      |
 
+</details>
+
 Lastly, a final note needs to be made on the length of the TikTok videos. These videos can only be up to 15 seconds long. However, in this research the full length of the songs are used. The motivation behind this is because 15 does not allow for a thoroughly and detailed analysis between the songs. 
 
 **Atypical songs in the corpus**
@@ -731,65 +733,80 @@ If a song in the top 10 of the month was not available on Spotify, the song is s
 **Setting up the trends per song** <br>
 The majority of the songs are associated with dance challenges, hence these songs are categorised under the *Dance* trend. All the other trends are referenced as *Other*.
 
-### Ain't that strange that I want to move my body to these songs. 
+<!-- ### Ain't that strange that I want to move my body to these songs.  -->
 ```{r}
-dance_tracks <- c("What You Know Bout Love", "WAP (feat. Megan Thee Stallion)",
-          "Roses - Imanbek Remix", "TKN (feat. Travis Scott)",
-          "You Got It", "Toosie Slide",
-          "Shower", "How You Like That",
-          "Supalonely", "Party Girl")
-dance_songs <- corpus %>%
-  filter(track.name %in% dance_tracks)
-
-danceVSenergy <- ggplot(corpus, aes(x = danceability, y = energy, size = tempo)) +
-  geom_point() +
-  geom_point(data = dance_songs,
-             aes(x = danceability,
-                 y = energy,
-                 color = track.name,
-                 size = tempo
-                 )
-             )+
-  geom_rug(size = 0.1) +      # Add 'fringes' to show data distribution.
-  scale_x_continuous(         # Fine-tune the x axis.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
-    minor_breaks = NULL       # Remove 'minor' grid-lines.
-  ) +
-  scale_y_continuous(         # Fine-tune the y axis in the same way.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),
-    minor_breaks = NULL
-  ) +
-  theme_light()+
-  # ylim(0,1.0) +
-  # xlim(0,1.0) +
-  labs(x = "Danceability",
-       y = "Energy",
-       size = "Tempo",
-       color = "Track")
-
-# ggplotly(danceVSenergy)
-danceVSenergy
+# dance_tracks <- c("What You Know Bout Love", "WAP (feat. Megan Thee Stallion)",
+#           "Roses - Imanbek Remix", "TKN (feat. Travis Scott)",
+#           "You Got It", "Toosie Slide",
+#           "Shower", "How You Like That",
+#           "Supalonely", "Party Girl")
+# dance_songs <- corpus %>%
+#   filter(track.name %in% dance_tracks)
+# 
+# danceVSenergy <- ggplot(corpus, aes(x = danceability, y = energy, size = tempo)) +
+#   geom_point() +
+#   geom_point(data = dance_songs,
+#              aes(x = danceability,
+#                  y = energy,
+#                  color = track.name,
+#                  size = tempo
+#                  )
+#              )+
+#   geom_rug(size = 0.1) +      # Add 'fringes' to show data distribution.
+#   scale_x_continuous(         # Fine-tune the x axis.
+#     limits = c(0, 1),
+#     breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
+#     minor_breaks = NULL       # Remove 'minor' grid-lines.
+#   ) +
+#   scale_y_continuous(         # Fine-tune the y axis in the same way.
+#     limits = c(0, 1),
+#     breaks = c(0, 0.50, 1),
+#     minor_breaks = NULL
+#   ) +
+#   theme_light()+
+#   # ylim(0,1.0) +
+#   # xlim(0,1.0) +
+#   labs(x = "Danceability",
+#        y = "Energy",
+#        size = "Tempo",
+#        color = "Track")
+# 
+# # ggplotly(danceVSenergy)
+# danceVSenergy
 ```
 
-***
+<!-- *** -->
 
-One of the biggest trends of TikTok are the *Viral Dances* almost everybody just had to learn. Here, a graphic displays how danceable a track is. This is broken down into Danceability, Energy and Tempo features from the [Spotify API](https://developer.spotify.com).
+<!-- One of the biggest trends of TikTok are the *Viral Dances* almost everybody just had to learn. Here, a graphic displays how danceable a track is. This is broken down into Danceability, Energy and Tempo features from the [Spotify API](https://developer.spotify.com). -->
 
-To no surprise does the majority of the tracks have a high danceability as most TikTok songs are dance challenges. Zooming in into the top 10 dance songs, the coloured dots have a danceability mean of 0.78. It is on the higher side, but not the highest. The reason for this can be that these songs have a fairly easy choreography, so that everyone can enjoy dancing to them together on TikTok. Increasing the difficulty of a choreography would probably lower the popularity, as less people would be able to perform the dance. Tracks with a higher danceability score often not labelled as dance songs. The track with the lowest danceability score of 0.676 is *Steven Universe* - L.Dre which is a low-fi hiphop song often used as background music for the TikTok video. The track with the highest danceability score is used for a dance challenge trend on TikTok. 
+<!-- To no surprise does the majority of the tracks have a high danceability as most TikTok songs are dance challenges. Zooming in into the top 10 dance songs, the coloured dots have a danceability mean of 0.78. It is on the higher side, but not the highest. The reason for this can be that these songs have a fairly easy choreography, so that everyone can enjoy dancing to them together on TikTok. Increasing the difficulty of a choreography would probably lower the popularity, as less people would be able to perform the dance. Tracks with a higher danceability score often not labelled as dance songs. The track with the lowest danceability score of 0.676 is *Steven Universe* - L.Dre which is a low-fi hiphop song often used as background music for the TikTok video. The track with the highest danceability score is used for a dance challenge trend on TikTok.  -->
 
-The track with the highest energy is *Mere Sapno Ki Rani - Tik Tok Remix* - from Eduardo Luzquiños ranked as penultimate of all songs in this corpus. There is no real trend linked to this song. 
+<!-- The track with the highest energy is *Mere Sapno Ki Rani - Tik Tok Remix* - from Eduardo Luzquiños ranked as penultimate of all songs in this corpus. There is no real trend linked to this song.  -->
 
 ### Are you in the *mood*, because I certainly am.
 
 ```{r}
 
-sharedCorpus <- SharedData$new(corpus)
-filter <- filter_checkbox("trend", "Trend", sharedCorpus, group = ~trends)
+happy <- corpus %>% filter(valence >= 0.5 & energy >= 0.5)
+angry <- corpus %>% filter(valence < 0.5 & energy >= 0.5)
+calm <-  corpus %>% filter(valence >= 0.5 & energy < 0.5)
+sad <-   corpus %>% filter(valence < 0.5 & energy < 0.5)
 
-emotion_plot <- ggplot(sharedCorpus, aes(x = valence, y = energy, shape = trends, size = danceability)) +
-  geom_point(aes(shape = trends, color = trends)) + 
+whaa <- 
+  bind_rows(
+    happy %>% mutate(emotion = 'Happy'),
+    angry %>% mutate(emotion = 'Angry'),
+    calm %>% mutate(emotion = 'Calm'),
+    sad %>% mutate(emotion = 'Sad')
+  )
+whaa <- whaa %>% rename(Track = track.name)
+
+sharedCorpus <- SharedData$new(whaa)
+filter_trend <- filter_checkbox("trend", "Trend", sharedCorpus, group = ~trends)
+filter_emotions <- filter_checkbox("emotions", "Emotion", sharedCorpus, group = ~emotion)
+
+emotion_plot <- ggplot(sharedCorpus, aes(x = valence, y = energy, size = danceability, label = Track)) +
+  geom_point(aes(shape = trends, color = trends )) + 
   scale_color_manual(values = c("#9FBEE1", "#1E3D60"))+
   theme_light() +
    scale_x_continuous(         # Fine-tune the x axis.
@@ -808,10 +825,12 @@ emotion_plot <- ggplot(sharedCorpus, aes(x = valence, y = energy, shape = trends
   annotate("text", 0.05, 0.95, label = "Angry", color = "black", alpha = 0.7, fontface="bold") +
   annotate("text", 0.95, 0.05, label = "Calm", color = "black", alpha = 0.7, fontface="bold") +
   annotate("text", 0.95, 0.95, label = "Happy", color = "black", alpha = 0.7, fontface="bold") +
-  labs(x = "Energy", y = "Valence", title = "The mood of the song", shape = "Trends", color = "Trends") +
+  labs(x = "Valence", y = "Energy", title = "The mood of the song", shape = "Trends", color = "Trends", label = "Track") +
   guides(size = FALSE)
   
-bscols(ggplotly(emotion_plot))
+# bscols(emotion_plot)
+bscols(ggplotly(emotion_plot, tooltip = "Track"))
+# bscols(ggplotly(emotion_plot))
 
 # ggplot(corpus, aes(x = energy, y = valence, shape = trends, size = danceability)) + 
 #   geom_point(aes(shape = trends, color = trends)) + 
@@ -839,11 +858,19 @@ bscols(ggplotly(emotion_plot))
 
 ***
 
+<details>
+<summary>Filters</summary>
+  `r bscols(widths = c(1,1),list(filter_trend, filter_emotions))`
+</details>
+So how "positive" and intense are the songs in the corpus? We can gauge this by using the Valence and Energy values. And what is more, we can categorise songs by emotions using these two values as well. This idea comes from the **valence-arousal model of emotion** developed by J. Russell, but I won't bother you with the details. All that you need to know, is that the model suggests that emotions are distributed along these two dimensions. The emotions are noted in the plot.
 
-`r bscols(list(filter))`
+Whenever I am endlessly scrolling on TikTok, I always get a good laugh out of it or I get really pumped up by all the good vibes from the videos. Hence, I'd assumed that the distribution coverage from large to small of the emotion would be Happy, Calm, Sad, and Angry. And as expected, **the amount of Happy songs is the largest**. Contrasting, I am surprised about Angry being second place. Maybe the Spotify API's valence does not exactly line up with the valence as described by the model.
 
+Hovering over the plot, we can identify the name of tracks. In the Sad quadrant we see a song with a very low Energy, *Steven Universe*. As we'd indicated, this is **one of our atypical songs** in the corpus. In the Calm quadrant, we have *Monkeys spinning Monkeys*. I got to admit this song is something else. You know, when you have a favourite song and you play it **over and over**. Well, with this specific song, you don't want to do that. At first the song can be quite calming indeed, but to listen to the entire 2:05 minutes? It will drive you insane and the song would better fit in the Angry quadrant.
 
-So how "positive" and intense are our songs? We can gauge this by using the Valence and Energy values. 
+Focusing on the different trends, we can see that the majority of Happy sons are Dance songs. Sad songs fall more often in the Other trend. Lastly, Angry and Calm songs have about a 1:1 distribution regarding trends. 
+
+And you might wonder, why are some points in the plot larger then others? Good quesiton. The **size indicates the danceability** of the song. A quick glance shows us that the sizes aren't that much different between the two trends. 
 
 <!-- ### #bananadrop Where did my sunglasses go?  -->
 
