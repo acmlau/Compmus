@@ -11,7 +11,6 @@ output:
     # logo: images/tiktok_logo.png
     favicon: images/tiktok_logo.png
 # output: html_document
-  
 ---
 ```{r, include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
@@ -21,6 +20,7 @@ library(spotifyr)
 library(tidyverse)
 library(plotly)
 library(grid)
+library(crosstalk)
 library(gridExtra)
 library(compmus)
 library(dplyr)
@@ -33,6 +33,7 @@ library(ggalt)
 library(heatmaply)
 library(spotifyr)
 library(compmus)
+library(shiny)
 ```
 
 ```{r}
@@ -166,9 +167,7 @@ corpus$trend = c("dance",
 "story telling",
 "dance",
 "dance")
-```
 
-```{r}
 corpus <- corpus %>%
   mutate(trends = ifelse(trend == "dance", "Dance", "Other"))
 ```
@@ -666,9 +665,11 @@ Throughout the entire song two chords are constantly played namely **Eb7** and *
 ### Yeah you've heard this song before, but where did it come from?
 The corpus for this project is a playlist from Spotify. [This playlists](https://open.spotify.com/playlist/5kQyvWFk8r1y2IQEtjBfey?si=HLNnUJzYQHSVYq7ub3lbRA) is a collection of songs that are famous from TikTok - a social media app used to make short-form videos. In these 15 seconds videos, music is played and people dance, lip-sync, tell stories, make humorous memes, and do all other kinds of trends. As the spaces people normally enjoy music were impacted by the pandemic, TikTok helped fill the need for communal musical experience all over the world. Starting from the beginning of the pandemic, March 2020, TikTok gained a lot of popularity. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from [this website](https://tokboard.com/months). 
 
-I want to find out how different these popular TikTok songs are from one another. The genres of the songs are quite diverse. Maybe there is a factor that is a core element of becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out what the similarities and differences are within a trend. More specifically I will be focusing on the *Dance* trend as that is the biggest on TikTok.
+I want to find out how different these popular TikTok songs are from one another. Altogether, the genres of the songs are quite the same. So I would assume that there is a factor that is a core element to becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out what the similarities and differences are within a trend. More specifically I will be focusing on the *Dance* trend as that is the biggest on TikTok.
 
-Interesting comparison points in the corpus of this project will be the overall mood of a song. Psychologist Robert Thayer's came up with a traditional model of mood. Where songs can be categorised along the lines of energy and stress, from happy to sad and calm to energetic (Bhat et al 359). Next to these 4 categories there are also 4 sub categories e.g. Happy - energetic, Happy - calm, etc. I assume the corpus has a lot of Happy, Energetic, Happy - Energetic and a few Happy - Calm and Calm songs. The reason for that is because many songs are for funny and trendy TikTok-challenges. It is expected that the intensity for Energetic and Happy - Energetic songs are on the higher spectrum than Happy - Calm and Calm songs. Another musical component that can be looked at is the Timbre of a song. Timbre is the tonal quality of a piece created by harmonics. It is to no surprise that these will be different between moods as well. Happy, Happy - Energetic and Energetic songs will have around a medium timbre. Whereas Calm and Happy - Calm songs will most likely have a low timbre. The pitch intervals of the songs will probably vary quite a lot between the mood categories, as it is very dependent on the singer's voice, and the instruments that are used. Lastly the rhythm of songs with a Happy, Happy - Energetic and Energetic mood will most likely be high paced, whereas Calm and Calm - Happy songs will have a more relaxed and slow rhythm. 
+<!-- Interesting comparison points in the corpus of this project will be the overall mood of a song. Psychologist Robert Thayer's came up with a traditional model of mood. Where songs can be categorised along the lines of energy and stress, from happy to sad and calm to energetic (Bhat et al 359). Next to these 4 categories there are also 4 sub categories e.g. Happy - energetic, Happy - calm, etc. I assume the corpus has a lot of Happy, Energetic, Happy - Energetic and a few Happy - Calm and Calm songs. The reason for that is because many songs are for funny and trendy TikTok-challenges. It is expected that the intensity for Energetic and Happy - Energetic songs are on the higher spectrum than Happy - Calm and Calm songs. Another musical component that can be looked at is the Timbre of a song. Timbre is the tonal quality of a piece created by harmonics. It is to no surprise that these will be different between moods as well. Happy, Happy - Energetic and Energetic songs will have around a medium timbre. Whereas Calm and Happy - Calm songs will most likely have a low timbre. The pitch intervals of the songs will probably vary quite a lot between the mood categories, as it is very dependent on the singer's voice, and the instruments that are used. Lastly the rhythm of songs with a Happy, Happy - Energetic and Energetic mood will most likely be high paced, whereas Calm and Calm - Happy songs will have a more relaxed and slow rhythm.  -->
+
+<details
 
 TikTok is a very creative platform where people use all kinds of remix songs which aren't accessible on Spotify although they are very popular songs. In the following table popular songs that were *not* listed on Spotify are shown.
 
@@ -724,10 +725,10 @@ The Song Titles in the table are copied from [the website](https://tokboard.com/
 Here is the playlist that represents the corpus:
 <iframe src="https://open.spotify.com/embed/playlist/5kQyvWFk8r1y2IQEtjBfey" width="280" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
-**Making the playlist**
+**Making the playlist** <br>
 If a song in the top 10 of the month was not available on Spotify, the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
 
-**Setting up the trends per song**
+**Setting up the trends per song** <br>
 The majority of the songs are associated with dance challenges, hence these songs are categorised under the *Dance* trend. All the other trends are referenced as *Other*.
 
 ### Ain't that strange that I want to move my body to these songs. 
@@ -783,7 +784,11 @@ The track with the highest energy is *Mere Sapno Ki Rani - Tik Tok Remix* - from
 ### Are you in the *mood*, because I certainly am.
 
 ```{r}
-ggplot(corpus, aes(x = energy, y = valence, shape = trends)) + 
+
+sharedCorpus <- SharedData$new(corpus)
+filter <- filter_checkbox("trend", "Trend", sharedCorpus, group = ~trends)
+
+emotion_plot <- ggplot(sharedCorpus, aes(x = valence, y = energy, shape = trends, size = danceability)) +
   geom_point(aes(shape = trends, color = trends)) + 
   scale_color_manual(values = c("#9FBEE1", "#1E3D60"))+
   theme_light() +
@@ -797,109 +802,137 @@ ggplot(corpus, aes(x = energy, y = valence, shape = trends)) +
     breaks = c(0, 0.5, 1),
     minor_breaks = NULL
   ) +
-  geom_vline(xintercept = 0.5, linetype="dotted", color = "black", alpha = 0.7) + 
-  geom_hline(yintercept = 0.5, linetype="dotted", color = "black", alpha = 0.7) + 
+  geom_vline(xintercept = 0.5, linetype="dotted", color = "black", alpha = 0.7) +
+  geom_hline(yintercept = 0.5, linetype="dotted", color = "black", alpha = 0.7) +
   annotate("text", 0.05, 0.05, label = "Sad", color = "black", alpha = 0.7, fontface="bold") +
   annotate("text", 0.05, 0.95, label = "Angry", color = "black", alpha = 0.7, fontface="bold") +
   annotate("text", 0.95, 0.05, label = "Calm", color = "black", alpha = 0.7, fontface="bold") +
   annotate("text", 0.95, 0.95, label = "Happy", color = "black", alpha = 0.7, fontface="bold") +
-  labs(x = "Energy", y = "Valence", title = "The mood of the song", shape = "Trends", color = "Trends")
+  labs(x = "Energy", y = "Valence", title = "The mood of the song", shape = "Trends", color = "Trends") +
+  guides(size = FALSE)
+  
+bscols(ggplotly(emotion_plot))
+
+# ggplot(corpus, aes(x = energy, y = valence, shape = trends, size = danceability)) + 
+#   geom_point(aes(shape = trends, color = trends)) + 
+#   scale_color_manual(values = c("#9FBEE1", "#1E3D60"))+
+#   theme_light() +
+#    scale_x_continuous(         # Fine-tune the x axis.
+#     limits = c(0, 1),
+#     breaks = c(0, 0.5, 1),   # Use grid-lines for quadrants only.
+#     minor_breaks = NULL       # Remove 'minor' grid-lines.
+#   ) +
+#   scale_y_continuous(         # Fine-tune the y axis in the same way.
+#     limits = c(0, 1),
+#     breaks = c(0, 0.5, 1),
+#     minor_breaks = NULL
+#   ) +
+#   geom_vline(xintercept = 0.5, linetype="dotted", color = "black", alpha = 0.7) + 
+#   geom_hline(yintercept = 0.5, linetype="dotted", color = "black", alpha = 0.7) + 
+#   annotate("text", 0.05, 0.05, label = "Sad", color = "black", alpha = 0.7, fontface="bold") +
+#   annotate("text", 0.05, 0.95, label = "Angry", color = "black", alpha = 0.7, fontface="bold") +
+#   annotate("text", 0.95, 0.05, label = "Calm", color = "black", alpha = 0.7, fontface="bold") +
+#   annotate("text", 0.95, 0.95, label = "Happy", color = "black", alpha = 0.7, fontface="bold") +
+#   labs(x = "Energy", y = "Valence", title = "The mood of the song", shape = "Trends", color = "Trends") + 
+#   guides(size = FALSE)
 ```
 
 ***
 
-Here follows a analysis of this plot
+
+`r bscols(list(filter))`
 
 
-### #bananadrop Where did my sunglasses go? 
+So how "positive" and intense are our songs? We can gauge this by using the Valence and Energy values. 
+
+<!-- ### #bananadrop Where did my sunglasses go?  -->
 
 ```{r}
-bananas <- corpus %>% 
-  filter(str_detect(corpus$track.name, "Banana"))
-
-library(compmus)
-
-## Conkarah, Shaggy
-banana_orig <-
-  get_tidy_audio_analysis("13OdVDwHdPlGkKHyjPoadB") %>%
-  select(segments) %>%
-  unnest(segments) %>%
-  select(start, duration, pitches)
-## Conkarah, Shaggy, DJ Fle
-banana_remix <-
-  get_tidy_audio_analysis("0dZpw3h6KZhcHec61qwevZ") %>%
-  select(segments) %>%
-  unnest(segments) %>%
-  select(start, duration, pitches)
-
-banana_dtw <- compmus_long_distance(
-  banana_orig  %>% mutate(pitches = map(pitches, compmus_normalise, "euclidean")),
-  banana_remix %>% mutate(pitches = map(pitches, compmus_normalise, "euclidean")),
-  feature = pitches,
-  method = "angular"
-) %>%
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_equal() +
-  labs(x = "Original", y = "Remix", title = "Banana song") +
-  theme_minimal() +
-  scale_fill_viridis_c(guide = NULL)
-
-banana_orig_chroma <- banana_orig %>%
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
-  compmus_gather_chroma() %>% 
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = pitch_class,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Original Banana song") +
-  theme_minimal() +
-  scale_fill_viridis_c()
-
-banana_remix_chroma <- banana_remix %>%
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
-  compmus_gather_chroma() %>% 
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = pitch_class,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Remix Banana song") +
-  theme_minimal() +
-  scale_fill_viridis_c()
+# bananas <- corpus %>% 
+#   filter(str_detect(corpus$track.name, "Banana"))
+# 
+# library(compmus)
+# 
+# ## Conkarah, Shaggy
+# banana_orig <-
+#   get_tidy_audio_analysis("13OdVDwHdPlGkKHyjPoadB") %>%
+#   select(segments) %>%
+#   unnest(segments) %>%
+#   select(start, duration, pitches)
+# ## Conkarah, Shaggy, DJ Fle
+# banana_remix <-
+#   get_tidy_audio_analysis("0dZpw3h6KZhcHec61qwevZ") %>%
+#   select(segments) %>%
+#   unnest(segments) %>%
+#   select(start, duration, pitches)
+# 
+# banana_dtw <- compmus_long_distance(
+#   banana_orig  %>% mutate(pitches = map(pitches, compmus_normalise, "euclidean")),
+#   banana_remix %>% mutate(pitches = map(pitches, compmus_normalise, "euclidean")),
+#   feature = pitches,
+#   method = "angular"
+# ) %>%
+#   ggplot(
+#     aes(
+#       x = xstart + xduration / 2,
+#       width = xduration,
+#       y = ystart + yduration / 2,
+#       height = yduration,
+#       fill = d
+#     )
+#   ) +
+#   geom_tile() +
+#   coord_equal() +
+#   labs(x = "Original", y = "Remix", title = "Banana song DTW") +
+#   theme_minimal() +
+#   scale_fill_viridis_c(guide = NULL)
+# 
+# banana_orig_chroma <- banana_orig %>%
+#   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+#   compmus_gather_chroma() %>% 
+#   ggplot(
+#     aes(
+#       x = start + duration / 2,
+#       width = duration,
+#       y = pitch_class,
+#       fill = value
+#     )
+#   ) +
+#   geom_tile() +
+#   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Original Banana song") +
+#   theme_minimal() +
+#   scale_fill_viridis_c()
+# 
+# banana_remix_chroma <- banana_remix %>%
+#   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+#   compmus_gather_chroma() %>% 
+#   ggplot(
+#     aes(
+#       x = start + duration / 2,
+#       width = duration,
+#       y = pitch_class,
+#       fill = value
+#     )
+#   ) +
+#   geom_tile() +
+#   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Remix Banana song") +
+#   theme_minimal() +
+#   scale_fill_viridis_c()
 ```
 
 
 ```{r}
-my_layout <- rbind(c(1,3), c(1,3), c(1,3), c(2,3), c(2,3), 
-                   c(2,3))
-
-grid.arrange(grobs = c(list(banana_orig_chroma, banana_remix_chroma), list(banana_dtw)), layout_matrix = my_layout)
+# my_layout <- rbind(c(1,3), c(1,3), c(1,3), c(2,3), c(2,3), 
+#                    c(2,3))
+# 
+# grid.arrange(grobs = c(list(banana_orig_chroma, banana_remix_chroma), list(banana_dtw)), layout_matrix = my_layout)
 
 ```
 
 
-***
+<!-- *** -->
 
-
-Plotted with Euclidean normalisation and angular distance. When listening to the songs, it does not seem like there is much difference between the two. Only the remix version is 26 seconds longer than the original Banana song and the last 17 seconds are silent. However, the Dynamic Time Warping of the chromagrams does not show that that the songs are the same.   
+<!-- When listening to the songs, it does not seem like there is much difference between the two. Only the remix version is 26 seconds longer than the original Banana song and the last 17 seconds are silent. However, the Dynamic Time Warping of the chromagrams does not show that that the songs are the same.    -->
 
 ### Okay but what about those 15 seconds, are they any different than the rest of the song? (pt.1)
 ```{r}
