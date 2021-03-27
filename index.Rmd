@@ -719,93 +719,8 @@ Focusing on the different trends, we can see that the majority of Happy sons are
 
 And you might wonder, why are some points in the plot larger then others? Good quesiton. The **size indicates the danceability** of the song. A quick glance shows us that the sizes aren't that much different between the two trends. 
 
-<!-- ### Okay but what about those 15 seconds, are they any different than the rest of the song? (pt. 1) -->
-```{r}
-# TKN <-
-#   get_tidy_audio_analysis("4w47S36wQGBhGg073q3nt7") %>% # Change URI.
-#   compmus_align(bars, segments) %>%                     # Change `bars`
-#   select(bars) %>%                                      #   in all three
-#   unnest(bars) %>%                                      #   of these lines.
-#   mutate(
-#     pitches =
-#       map(segments,
-#         compmus_summarise, pitches,
-#         method = "mean", norm = "manhattan"              # Change summary & norm.
-#       )
-#   ) %>%
-#   mutate(
-#     timbre =
-#       map(segments,
-#         compmus_summarise, timbre,
-#         method = "mean", norm = "manhattan"              # Change summary & norm.
-#       )
-#   )
-# 
-# 
-# ssm_pitch <- TKN %>%
-#   compmus_self_similarity(pitches, "euclidean") %>% 
-#   ggplot(
-#     aes(
-#       x = xstart + xduration / 2,
-#       width = xduration,
-#       y = ystart + yduration / 2,
-#       height = yduration,
-#       fill = d
-#     )
-#   ) +
-#   geom_tile() +
-#   coord_fixed() +
-#   scale_fill_viridis_c(guide = "none") +
-#   theme_classic() +
-#   labs(x = "", y = "", title = "Pitches SSM") +
-#   geom_segment(aes(x = 63, xend = 63, y=1, yend= 127), col = 'red') + 
-#   geom_segment(aes(x = 78, xend = 78, y=1, yend= 127), col = 'red') + 
-#   annotate("text", 70.5, 7, label = "video", color = "white", size = 3, fontface="bold")+ 
-#   geom_segment(aes(x = 25, xend = 25, y=1, yend= 127), col = 'white') + 
-#   geom_segment(aes(x = 51, xend = 51, y=1, yend= 127), col = 'white') + 
-#   annotate("text", 12.5, 7, label = "Rosalia", color = "white", size = 3, fontface="bold")+ 
-#   annotate("text", 40.5, 7, label = "Drums", color = "white", size = 3, fontface="bold") + 
-#   geom_segment(aes(x = 56, xend = 56, y=1, yend= 127), col = 'white') + 
-#   geom_segment(aes(x = 66, xend = 66, y=1, yend= 127), col = 'white') + 
-#   geom_segment(aes(x = 81, xend = 81, y=1, yend= 127), col = 'white') + 
-#   geom_segment(aes(x = 96, xend = 96, y=1, yend= 127), col = 'white') 
-# ssm_timbre <- TKN %>%
-#   compmus_self_similarity(timbre, "euclidean") %>% 
-#   ggplot(
-#     aes(
-#       x = xstart + xduration / 2,
-#       width = xduration,
-#       y = ystart + yduration / 2,
-#       height = yduration,
-#       fill = d
-#     )
-#   ) +
-#   geom_tile() +
-#   coord_fixed() +
-#   scale_fill_viridis_c(guide = "none") +
-#   theme_classic() +
-#   labs(x = "", y = "", title = "Timbre SSM") +
-#   geom_vline(xintercept = 63, color = "black") +
-#   geom_vline(xintercept = 78, color = "black")
-# 
-# my_layout <- rbind(c(1,2), c(1,2))
-# 
-# grid.arrange(grobs = c(list(ssm_pitch), list(ssm_timbre)), layout_matrix = my_layout,
-#              top = textGrob("TKN - ROSALÍA, Travis Scott",gp=gpar(fontsize=20,font=3)))
 
-```
-
-***
-
-<!-- On the left you can see two self-similarity matrices (SSM) for the *TKN (feat. Travis scott)* - ROSALÍA, Travis Scott. Let's dissect these plots separately. -->
-
-<!-- First we have the SSM based on pitches. There is a slight checkerboard pattern going on. That is to no surprise as: the first 25 seconds of the song is mostly ROSALÍA sining with a very subtle melody playing in the back. After those 25 seconds a clear drum sound is added that plays through the next 31 seconds (0:25 - 0 :56). It is visible that throughout those 31 seconds the song does not really change that much as the block stays pretty much consistently the same colour, hence there is homogeneity. This checkerboard pattern sort of repeats itself throughout the song. Between 56 - 66 seconds (0:56 - 1:06) and 81 - 96 seconds (1:21 - 1:36) we see a slighly lighter blue. In these parts only Travis is singing with a sort of autotune voice. This autotune without the beats might result in a slightly different pitch than the parts before and after this. Very noticeable is the bright yellow/light green stripe near the end of the song on the pitches SSM between 113-115 seconds (1:53- 1:55). In the song we hear a clear sort of clap sound, which can relate to all pitches in a chromagram (?It's based on a chromagram right?). Hence it isn't strange that all the bright line occures in the SSM based on pitches. However, we would have expected such a bright line also around 31-33 seconds as there is a similar clap sound in the track.  -->
-
-<!-- Moving on to the second SSM. The song begins with a melody that contains no drums in the first 3 seconds. This apparently has a different timbre than the rest of the song. Then between 31-33 there is a slight lighter stripe, this is actually the first clap sound that didn't show up in the SSM based on pitches. Again around 56-66 seconds (0:56 - 1:06) and 81-96 seconds (1:21 - 1:36) we see lighter colours in the SSM. Appararently, those autotuned singing parts of Travis result in a different Timbre. Moreover since the beat is very much in the background/not there this is also different timbre than the rest of the song. Lastly, on 115 seconds there is a very bright stripe visible in the SSM. This corresponds again to the clap in the song.  -->
-
-<!-- The 15 seconds used on TikTok are between 63 - 78 seconds (1:03 - 1:18), which is mostly used for a dance trend. This part is marked between two black lines(should I leave black?) on the two SSMs. For both SSM we see that the colour is not much different than the rest in the SSM. This indicates that the 15 seconds used for the TikTok resembles the entire song pretty well.  -->
-
-### Okay but what about those 15 seconds, are they any different than the rest of the song?
+### Okay but what about those **15 seconds**, are they any **different** than the rest of the song? A glance at two songs based on timbre.
 
 ```{r}
 lemonade <-
@@ -828,29 +743,28 @@ lemonade <-
       )
   )
 
-
-lemon_ssm_pitch <- lemonade %>%
-  compmus_self_similarity(pitches, "euclidean") %>%
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "", title = "Lemonade Pitches") +
-  # annotate("text", 27.5, 7, label = "Video", color = "white", size = 3, fontface="bold") + 
-  geom_segment(aes(x = 24, xend = 24, y=1, yend= 192), col = 'white') +
-  geom_segment(aes(x = 31, xend = 31, y=1, yend= 192), col = 'white') + 
-  annotate("segment", x = 55, xend = 28, y = 50, yend = 50, colour = 'white',
-           arrow = arrow(angle = 25, type = "closed", length = unit(2, "mm"))) + 
-  annotate("text", x = 85, 50, label = "Video", color ="white", fontface = "bold", size = 3)
+# lemon_ssm_pitch <- lemonade %>%
+#   compmus_self_similarity(pitches, "euclidean") %>%
+#   ggplot(
+#     aes(
+#       x = xstart + xduration / 2,
+#       width = xduration,
+#       y = ystart + yduration / 2,
+#       height = yduration,
+#       fill = d
+#     )
+#   ) +
+#   geom_tile() +
+#   coord_fixed() +
+#   scale_fill_viridis_c(guide = "none") +
+#   theme_classic() +
+#   labs(x = "", y = "", title = "Lemonade Pitches") +
+#   # annotate("text", 27.5, 7, label = "Video", color = "white", size = 3, fontface="bold") + 
+#   geom_segment(aes(x = 24, xend = 24, y=1, yend= 192), col = 'white') +
+#   geom_segment(aes(x = 31, xend = 31, y=1, yend= 192), col = 'white') + 
+#   annotate("segment", x = 55, xend = 28, y = 50, yend = 50, colour = 'white',
+#            arrow = arrow(angle = 25, type = "closed", length = unit(2, "mm"))) + 
+#   annotate("text", x = 85, 50, label = "Video", color ="white", fontface = "bold", size = 3)
 
 lemon_ssm_timbre <- lemonade %>%
   compmus_self_similarity(timbre, "euclidean") %>%
@@ -875,8 +789,7 @@ lemon_ssm_timbre <- lemonade %>%
            arrow = arrow(angle = 25, type = "closed", length = unit(2, "mm"))) +
   annotate("text", x = 85, 50, label = "Video", color ="white", fontface = "bold", size = 3)
 
-
-TKN <-
+wipe <-
   get_tidy_audio_analysis("2kefHjNepGePZG4WxH2Vh4") %>% # Change URI.
   compmus_align(bars, segments) %>%                     # Change `bars`
   select(bars) %>%                                      #   in all three
@@ -897,30 +810,30 @@ TKN <-
   )
 
 
-wipe_ssm_pitch <- TKN %>%
-  compmus_self_similarity(pitches, "euclidean") %>% 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "", title = "#WIPEITDOWN Pitches") +
-  # annotate("text", 7.5, 7, label = "Video", color = "white", size = 3, fontface="bold") + 
-  geom_vline(xintercept = 1, color = "white") + 
-  geom_vline(xintercept = 15, color = "white") + 
-  annotate("segment", x = 20, xend = 7.5, y = 50, yend = 50, colour = 'white',
-           arrow = arrow(angle = 25, type = "closed", length = unit(2, "mm"))) +
-  annotate("text", x = 35, 50, label = "Video", color ="white", size = 3, fontface = "bold")
+# wipe_ssm_pitch <- wipe %>%
+#   compmus_self_similarity(pitches, "euclidean") %>% 
+#   ggplot(
+#     aes(
+#       x = xstart + xduration / 2,
+#       width = xduration,
+#       y = ystart + yduration / 2,
+#       height = yduration,
+#       fill = d
+#     )
+#   ) +
+#   geom_tile() +
+#   coord_fixed() +
+#   scale_fill_viridis_c(guide = "none") +
+#   theme_classic() +
+#   labs(x = "", y = "", title = "#WIPEITDOWN Pitches") +
+#   # annotate("text", 7.5, 7, label = "Video", color = "white", size = 3, fontface="bold") + 
+#   geom_vline(xintercept = 1, color = "white") + 
+#   geom_vline(xintercept = 15, color = "white") + 
+#   annotate("segment", x = 20, xend = 7.5, y = 50, yend = 50, colour = 'white',
+#            arrow = arrow(angle = 25, type = "closed", length = unit(2, "mm"))) +
+#   annotate("text", x = 35, 50, label = "Video", color ="white", size = 3, fontface = "bold")
 
-wipe_ssm_timbre <- TKN %>%
+wipe_ssm_timbre <- wipe %>%
   compmus_self_similarity(timbre, "euclidean") %>% 
   ggplot(
     aes(
@@ -959,8 +872,7 @@ Let's start with the SSM for our **Dance track** - *Lemonade*. On this plot we c
 
 Moving on to our SSM for *#WIPEITDOWN*, we see a very clear checkerboard pattern. What this pattern indicates is that there are parts in the song that are similar to one another, but not constantly similar like in our SSM for *Lemonade*. We only see one clear light strip in the entire SSM for this song, so this indicates that this part is quite different than the rest. And it happens to fall within the first half of the time frame of our TikTok video. The other half is more repeated throughout the song as we see more similar colours.
 
-### Oh that's a **classic** for sure... or is it really?
-
+### That is a **classic** for sure... or is it not entirely **in tune** with the rest?
 
 ```{r}
 classical <-
@@ -1005,18 +917,21 @@ classical %>%
   labs(x = "Time (s)", y = "", title = "Eine Kleine Nachtmusik K. 525. Allegro - Mozart") +
   geom_hline(yintercept = "G:maj", color = "white") +
   geom_hline(yintercept = "D:maj", color = "white")  +
+  geom_hline(yintercept = "C:min", color = "red", alpha = 0.5)+
   geom_hline(yintercept = "E:maj", color = "red")+
   geom_vline(xintercept = 150, color = "white")+
-  geom_vline(xintercept = 195, color = "white")
+  geom_vline(xintercept = 195, color = "white") + 
+  geom_segment(aes(x =150, xend = 195, y="F:maj", yend= "F:maj"), col = 'orange') +
+  geom_segment(aes(x =150, xend = 195, y="Eb:maj", yend= "Eb:maj"), col = 'orange') + 
+  geom_segment(aes(x =150, xend = 195, y="F#:min", yend= "F#:min"), col = 'orange')
 ```
 
 ***
 
+Unlike *Lemonade* and *#WIPEITDOWN* as archetypes of the corpus, *Eine kleine Nachtmusic K.* by Wolfgang Amadeus Mozart is a special snowflake as it is the only track that falls within the genre of **classical music**. So it isn't quite in tune with all the other TikTok songs. On this page, we will look if the Spotify API's key estimation is properly adjusted to the actual keys of the song.
 
+On the [Wikipedia website](https://en.wikipedia.org/wiki/Eine_kleine_Nachtmusik) of this well-known song, it states that this piece has four movements i.e. G major - D major - Ambiguous key - G major, which are indicated with horizontal white stripes. However, if we look in the keygram we see that the piece is found to be written in Emajor, the red line. The Emajor key is most similar to C# minor - the duller red line. However, this chord isn't that much darker than all the other keys. A contrasting part starts at time steps 150 and ends at 195. We see that the keys F major, Eb major and F# minor (short orange lines) are darker coloured within that time frame. Not surprising, as the recapitulation of the classical piece is played. The recapitulation is often the general melody, slightly modified and often played in a **different key** 
 
-Here we have a keygram of the song *Eine kleine Nachtmusik K.* - Wolfgang Amadeus Mozart, which is an outlier in the corpus in the sense that it is the only classical piece in the corpus. 
-
-On the [Wikipedia website](https://en.wikipedia.org/wiki/Eine_kleine_Nachtmusik) of this well-known song it states that this piece has four movements i.e. G major - D major - Ambiguous key - G major, which are indicated with horizontal white stripes. However, if we look in the chordogram we see that the piece is found to be written in Emajor, indicated with a horizontal red line. In harmony theory the Emajor key is most similar to **C#minor** but this chord isn't as dark as the Emajor one. Between time steps 150 - 195 (2:30 - 3:15)(the vertical white lines), we see that the keys F major, Eb major and F# minor are darker coloured. Maybe the spotify API did not estimate the chords well because of the instruments: string instruments.
-
+Overall there are several reasons why this key estimation did not work out as expected. For starters, it could be the case that the song is **not pitched exactly around 440 Hz**, this offsets the estimation for Spotify's API. Secondly, string instruments deal with **vibrato**. So this means that there is no exact frequency, rather it is blurred as there is a constant modulation in frequency. For key estimation, one needs to look at the different pitches of a song. Meaning, the combination of 4 string instruments that don't play the perfect pitch of notes - due to vibrato - can also result in the Spotify API being incapable of the key estimation of this particular song. 
 
 ### Conclusion
