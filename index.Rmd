@@ -170,89 +170,14 @@ corpus <- corpus[!duplicated(corpus$track.name),]
 pop_sorted <- corpus[order(-corpus$track.popularity),]
 ```
 ```{r}
-corpus$trend = c("dance",
-"dance",
-"dance",
-"dance",
-"transformation", 
-"random", 
-"dance",
-"transformation",
-"humour", 
-"humour",
-"dance",
-"dance",
-"humour",
-"story telling",
-"random",
-"transformation",
-"dance",
-"humour",
-"dance",
-"dance",
-"dance",
-"dance",
-"transformation",
-"dance",
-"humour",
-"dance",
-"transformation",
-"dance", 
-"dance",
-"random",
-"dance",
-"dance",
-"humour",
-"random",
-"story telling",
-"dance",
-"story telling",
-"dance",
-"dance",
-"dance",
-"dance",
-"dance",
-"humour",
-"dance",
-"story telling",
-"humour",
-"dance",
-"random",
-"dance",
-"dance",
-"dance",
-"story telling",
-"dance", 
-"dance",
-"dance",
-"dance",
-"dance",
-"random",
-"dance",
-"story telling",
-"transformation",
-"dance",
-"dance",
-"random",
-"dance",
-"random",
-"random",
-"random",
-"random",
-"humour",
-"dance",
-"story telling",
-"dance",
-"story telling",
-"transformation",
-"random",
-"random",
-"dance",
-"dance",
-"random",
-"story telling",
-"dance",
-"dance")
+corpus$trend = c("dance","dance","dance","dance","transformation", "random", "dance","transformation","humour", 
+"humour","dance","dance","humour","story telling","random","transformation","dance","humour","dance","dance",
+"dance","dance","transformation","dance","humour","dance","transformation","dance", "dance","random","dance",
+"dance","humour","random","story telling","dance","story telling","dance","dance","dance","dance","dance",
+"humour","dance","story telling","humour","dance","random","dance","dance","dance","story telling","dance", 
+"dance","dance","dance","dance","random","dance","story telling","transformation","dance","dance","random",
+"dance","random","random","random","random","humour","dance","story telling","dance","story telling","transformation",
+"random","random","dance","dance","random","story telling","dance","dance")
 
 corpus <- corpus %>%
   mutate(trends = ifelse(trend == "dance", "Dance", "Other"))
@@ -601,7 +526,7 @@ The majority of the songs are associated with dance challenges, hence these song
 
 
 
-### Are you in the **mood**, because I certainly am. Here is how TikTok plays with your **Emotions**
+### Are you in the **mood**, because I certainly am. Here is how TikTok plays with your **Emotions**{data-commentary-width=500px}
 
 ```{r}
 
@@ -667,7 +592,7 @@ Focusing on the different trends, we can see that the majority of Happy sons are
 
 And you might wonder, why are some points in the plot larger then others? Good quesiton. The **size indicates the danceability** - another feature of the Spotify API - of the song. A quick glance shows us that the sizes aren't that much different between the two trends. 
 
-### Okay but what about those **15 seconds**, are they any **different** than the rest of the song? A glance at two songs based on timbre.
+### Okay but what about those **15 seconds**, are they any **different** than the rest of the song? A glance at two songs based on timbre.{data-commentary-width=500}
 
 ```{r}
 lemonade <-
@@ -819,7 +744,7 @@ Let's start with the SSM for our **Dance track** - *Lemonade*. On this plot we c
 
 Moving on to our SSM for *#WIPEITDOWN*, we see a very clear checkerboard pattern. What this pattern indicates is that there are parts in the song that are similar to one another, but not constantly similar like in our SSM for *Lemonade*. We only see one clear light strip in the entire SSM for this song, so this indicates that this part is quite different than the rest. And it happens to fall within the first half of the time frame of our TikTok video. The other half is more repeated throughout the song as we see more similar colours.
 
-### That is a **classic** for sure... or is it not entirely **in tune** with the rest?
+### That is a **classic** for sure... or is it not entirely **in tune** with the rest?{data-commentary-width=500}
 
 ```{r}
 classical <-
@@ -882,7 +807,7 @@ On the [Wikipedia website](https://en.wikipedia.org/wiki/Eine_kleine_Nachtmusik)
 Overall there are several reasons why this key estimation did not work out as expected. For starters, it could be the case that the song is **not pitched exactly around 440 Hz**, this offsets the estimation for Spotify's API. Secondly, string instruments deal with **vibrato**. So this means that there is no exact frequency, rather it is blurred as there is a constant modulation in frequency. For key estimation, one needs to look at the different pitches of a song. Meaning, the combination of 4 string instruments that don't play the perfect pitch of notes - due to vibrato - can also result in the Spotify API being incapable of the key estimation of this particular song. 
 
 
-### Did you find the **key** of what makes a TikTok song suitable for **Dance VS Other** trends? Maybe we should pump up the beat because the **tempo** is too slow. 
+### Did you find the **key** of what makes a TikTok song suitable for **Dance VS Other** trends? Maybe we should pump up the beat because the **tempo** is too slow. {data-commentary-width=500}
 
 ```{r}
 dance_counts <- corpus %>%
@@ -955,7 +880,25 @@ Zooming out from the *Eine Kleine Nachtmusik K. 525. Allegro* track, let's have 
 
 Overall we can see that there is quite some similarity between the different trends. For example both trends indicate that within the trend most songs have either a C# or a G key. Moreover the majority of the keys used in both trend categories are A#, B, C, C#, G, and G# which all have a score of higher than 0.075 (purple line). The only huge dissimilarity between the trends that can be seen are within the key D: Dance tracks have a score of 0.1125 score whereas for Other tracks have only a 0.023 score. So just like the features Valence, Energy and Danceability from our emotions graph, the **Key** feature also has **no clear distinction** between the two trends. 
 
-Luckily, there are still some other features available. The second row of plot shows a histogram of the different tempos in the corpus split up by trend. In general, the majority of the songs should be around [the preferred tempo](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.465.8019&rep=rep1&type=pdf) of 120-130 BPM. For both plots the mean is indicated with a purple line along with the respective mean of tempo. Although the means are quite close to one another, the distribution is quite different. We can see that the Dance tracks have a distribution similar to a Normal distribution. The Other tracks are more uniformly distributed. This means that we have found our **first difference** based on **tempo** between the two trends! 
+Luckily, there are still some other features available. The second row of plot shows a histogram of the different tempos in the corpus split up by trend. In general, the majority of the songs should be around [the preferred tempo](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.465.8019&rep=rep1&type=pdf) of 120-130 BPM. For both plots the mean is indicated with a purple line along with the respective mean of tempo. Although the means are quite close to one another, the distribution is quite different. We can see that the Dance tracks have a distribution similar to a Normal distribution. The Other tracks are more uniformly distributed. This means that we have found our **first difference** based on **tempo** between the two trends!
+
+### alright
+
+```{r}
+corpus %>%
+  ggplot(aes(x = trends, y = track.duration_ms/1000, fill = trends))+
+  scale_fill_manual(values = c("#9FBEE1", "#1E3D60")) + 
+  geom_violin() + geom_point(size = 2, aes(colour = loudness)) + 
+  scale_colour_distiller(palette = "PuRd") + 
+  guides(fill = FALSE) + 
+  labs(x = "Trend", y = "Duration (s)", title = "Violinplots to look into the duration and loudness", colour = "Loudness (dB)") + theme_light() +
+  scale_y_continuous(breaks= seq(60,360, 60),minor_breaks = NULL)
+  
+```
+
+***
+
+Here follows a analysis of the plots.
 
 
 ### Conclusion
