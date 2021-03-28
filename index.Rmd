@@ -1,7 +1,7 @@
 ---
 title: "Isn't that a TikTok song?"
 author: "Anna Lau"
-date: "9-2-2021"
+date: "February-March 2020"
 # runtime: shiny
 output:
   flexdashboard::flex_dashboard:
@@ -168,8 +168,7 @@ corpus <-
 # Delete duplicate songs
 corpus <- corpus[!duplicated(corpus$track.name),]
 pop_sorted <- corpus[order(-corpus$track.popularity),]
-```
-```{r}
+
 corpus$trend = c("dance","dance","dance","dance","transformation", "random", "dance","transformation","humour", 
 "humour","dance","dance","humour","story telling","random","transformation","dance","humour","dance","dance",
 "dance","dance","transformation","dance","humour","dance","transformation","dance", "dance","random","dance",
@@ -181,8 +180,7 @@ corpus$trend = c("dance","dance","dance","dance","transformation", "random", "da
 
 corpus <- corpus %>%
   mutate(trends = ifelse(trend == "dance", "Dance", "Other"))
-```
-```{r}
+
 corpus<- corpus %>% mutate(poprange = case_when(
     between(track.popularity, 0, 50) ~ "Low",
     between(track.popularity, 51, 75) ~ "Middle",
@@ -461,7 +459,7 @@ I want to find out how different these popular TikTok songs are from one another
 <!-- Interesting comparison points in the corpus of this project will be the overall mood of a song. Psychologist Robert Thayer's came up with a traditional model of mood. Where songs can be categorised along the lines of energy and stress, from happy to sad and calm to energetic (Bhat et al 359). Next to these 4 categories there are also 4 sub categories e.g. Happy - energetic, Happy - calm, etc. I assume the corpus has a lot of Happy, Energetic, Happy - Energetic and a few Happy - Calm and Calm songs. The reason for that is because many songs are for funny and trendy TikTok-challenges. It is expected that the intensity for Energetic and Happy - Energetic songs are on the higher spectrum than Happy - Calm and Calm songs. Another musical component that can be looked at is the Timbre of a song. Timbre is the tonal quality of a piece created by harmonics. It is to no surprise that these will be different between moods as well. Happy, Happy - Energetic and Energetic songs will have around a medium timbre. Whereas Calm and Happy - Calm songs will most likely have a low timbre. The pitch intervals of the songs will probably vary quite a lot between the mood categories, as it is very dependent on the singer's voice, and the instruments that are used. Lastly the rhythm of songs with a Happy, Happy - Energetic and Energetic mood will most likely be high paced, whereas Calm and Calm - Happy songs will have a more relaxed and slow rhythm.  -->
 
 <details>
-<summary>↓Specification of the corpus selection↓</summary>
+<summary>**↓Specification of the corpus selection↓<**/summary>
 TikTok is a very creative platform where people use all kinds of remix songs which aren't accessible on Spotify although they are very popular songs. In the following table popular songs that were *not* listed on Spotify are shown.
 
 | Song Title                                | Month    | Rank |
@@ -505,7 +503,7 @@ Lastly, a final note needs to be made on the length of the TikTok videos. These 
 
 **Atypical songs in the corpus**
 
-* *Eine kleine Nachtmusik K.* - Wolfgang Amadeus, stands out a lot from the rest. It is the only classical piece in the corpus and is composed in the year 1787. 
+* *Eine kleine Nachtmusik K. 252 Allegro* - Wolfgang Amadeus, stands out a lot from the rest. It is the only classical piece in the corpus and is composed in the year 1787. 
 * *Steven Universe* - L.Dre: one of the few slow paced songs, and it is only 2.14 minutes long  without lyrics. 
 * *Monkeys Spinning Monkeys* - Keving MacLeod, one of the few songs that have no lyrics also very short 
 * Funny to see that from December there are seasonal songs e.g. *All I Want for Christmas is You* - Mariah Carey and *Jinge Bell Rock* - Bobby Helms. 
@@ -523,8 +521,6 @@ If a song in the top 10 of the month was not available on Spotify, the song is s
 
 **Setting up the trends per song** <br>
 The majority of the songs are associated with dance challenges, hence these songs are categorised under the *Dance* trend. All the other trends are referenced as *Other*.
-
-
 
 ### Are you in the **mood**, because I certainly am. Here is how TikTok plays with your **Emotions**{data-commentary-width=500px}
 
@@ -578,7 +574,7 @@ bscols(ggplotly(emotion_plot, tooltip = "Track"))
 ***
 
 <details>
-<summary>↓ Filters ↓</summary>
+<summary>**↓ Filters ↓**</summary>
   `r bscols(widths = c(1,1),list(filter_trend, filter_emotions))`
 </details>
 
@@ -736,13 +732,13 @@ grid.arrange(lemon_ssm_timbre, wipe_ssm_timbre, ncol = 2, nrow = 1,
 
 Now that we've looked at the emotions of the songs, we are going to explore the timbre of two different songs. Timbre is often use as an indicator why certain sounds sound differently. 
 
-I've chosen the tracks *Lemonade* by Internet Money and *#WIPEITDOWN* by BMW KENNY. I picked these two songs as they had similar values for Spotify's features. The *Lemonade* track is associated with a Dance trend, whereas the *#WIPEITDOWN* is associated with Other trend. 
+I've chosen the tracks *Lemonade* by Internet Money and *#WIPEITDOWN* by BMW KENNY. I picked these two songs as they had similar values for Spotify's features and are both archetypes as TikTok songs. The *Lemonade* track is associated with a Dance trend, whereas the *#WIPEITDOWN* is associated with Other trend. 
 
 As we all might know, TikTok consists of many short videos typically of 15 seconds. What I wanted to find out with these plots, is if those specific ±15 seconds are special within a track. For this we'll dive a bit deeper into these Self-similarity matices (SSMs).
 
 Let's start with the SSM for our **Dance track** - *Lemonade*. On this plot we can sort of see a large darker square surrounded with some light sides. What this simply indicates is that overall the middle of the song has quite a homogeneous character. The lighter parts - the beginning and ending - have a different character than the middle. Moreover, they even have a different character from each other as the ending is lighter than the beginning. The time frame that is used for the video falls within that large darker square, so it is actually quite **a representative section** of the song. 
 
-Moving on to our SSM for *#WIPEITDOWN*, we see a very clear checkerboard pattern. What this pattern indicates is that there are parts in the song that are similar to one another, but not constantly similar like in our SSM for *Lemonade*. We only see one clear light strip in the entire SSM for this song, so this indicates that this part is quite different than the rest. And it happens to fall within the first half of the time frame of our TikTok video. The other half is more repeated throughout the song as we see more similar colours.
+Moving on to our SSM for *#WIPEITDOWN*, we see a very clear **checkerboard pattern.** What this pattern indicates is that there are parts in the song that are similar to one another, but not constantly similar like in our SSM for *Lemonade*. We only see one clear light strip in the entire SSM for this song, so this indicates that this part is quite different than the rest. And it happens to fall within the first half of the time frame of our TikTok video. The other half is more repeated throughout the song as we see more similar colours.
 
 ### That is a **classic** for sure... or is it not entirely **in tune** with the rest?{data-commentary-width=500}
 
@@ -882,23 +878,147 @@ Overall we can see that there is quite some similarity between the different tre
 
 Luckily, there are still some other features available. The second row of plot shows a histogram of the different tempos in the corpus split up by trend. In general, the majority of the songs should be around [the preferred tempo](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.465.8019&rep=rep1&type=pdf) of 120-130 BPM. For both plots the mean is indicated with a purple line along with the respective mean of tempo. Although the means are quite close to one another, the distribution is quite different. We can see that the Dance tracks have a distribution similar to a Normal distribution. The Other tracks are more uniformly distributed. This means that we have found our **first difference** based on **tempo** between the two trends!
 
-### alright
+### A deep dive into **tempo**, **duration** and **volume** {data-commentary-width=500px}
 
 ```{r}
-corpus %>%
-  ggplot(aes(x = trends, y = track.duration_ms/1000, fill = trends))+
-  scale_fill_manual(values = c("#9FBEE1", "#1E3D60")) + 
-  geom_violin() + geom_point(size = 2, aes(colour = loudness)) + 
-  scale_colour_distiller(palette = "PuRd") + 
-  guides(fill = FALSE) + 
-  labs(x = "Trend", y = "Duration (s)", title = "Violinplots to look into the duration and loudness", colour = "Loudness (dB)") + theme_light() +
-  scale_y_continuous(breaks= seq(60,360, 60),minor_breaks = NULL)
-  
+mar <-get_playlist_audio_features("thesoundsofspotify","0IIt2QOYxRawDHQbZ8ln3M") %>%  add_audio_analysis()
+apr <-get_playlist_audio_features("thesoundsofspotify","0PTklfVTalxE8j6T9NYZEG") %>%  add_audio_analysis()
+may <-get_playlist_audio_features("thesoundsofspotify","093VTj7Esn9nYiFQFoa1YH") %>%  add_audio_analysis()
+jun <-get_playlist_audio_features("thesoundsofspotify","2F3YMerEwMjXn3A4S7es6H") %>%  add_audio_analysis()
+jul <-get_playlist_audio_features("thesoundsofspotify","4U9w6uCKivCsRLHFyZgkxI") %>%  add_audio_analysis()
+aug <-get_playlist_audio_features("thesoundsofspotify","3zvNyJbb9rjdF0vag2O5xG") %>%  add_audio_analysis()
+sep <-get_playlist_audio_features("thesoundsofspotify","2APegDsKij3yaL1ffG6Bz4") %>%  add_audio_analysis()
+oct <-get_playlist_audio_features("thesoundsofspotify","4np9mWC6T4O8x7hoxTeUPP") %>%  add_audio_analysis()
+nov <-get_playlist_audio_features("thesoundsofspotify","5xyKvHZIeWGAgWJ6ZEVm3H") %>%  add_audio_analysis()
+dec <-get_playlist_audio_features("thesoundsofspotify","4n90Xr0lxy1yLhbzTAgzTx") %>%  add_audio_analysis()
+
+corpus2 <- 
+  bind_rows(
+    mar %>% mutate(category = "Mar"),
+    apr %>% mutate(category = "Apr"),
+    may %>% mutate(category = "May"),
+    jun %>% mutate(category = "Jun"),
+    jul %>% mutate(category = "Jul"),
+    aug %>% mutate(category = "Aug"),
+    sep %>% mutate(category = "Sep"),
+    oct %>% mutate(category = "Oct"),
+    nov %>% mutate(category = "Nov"),
+    dec %>% mutate(category = "Dec")
+  )
+
+# Delete duplicate songs
+corpus2 <- corpus2[!duplicated(corpus2$track.name),]
+
+corpus2$trend = c("dance","dance","dance","dance","transformation", "random", "dance","transformation","humour", 
+"humour","dance","dance","humour","story telling","random","transformation","dance","humour","dance","dance",
+"dance","dance","transformation","dance","humour","dance","transformation","dance", "dance","random","dance",
+"dance","humour","random","story telling","dance","story telling","dance","dance","dance","dance","dance",
+"humour","dance","story telling","humour","dance","random","dance","dance","dance","story telling","dance", 
+"dance","dance","dance","dance","random","dance","story telling","transformation","dance","dance","random",
+"dance","random","random","random","random","humour","dance","story telling","dance","story telling","transformation",
+"random","random","dance","dance","random","story telling","dance","dance")
+
+corpus2 <- corpus2 %>%
+  mutate(trends = ifelse(trend == "dance", "Dance", "Other"))
+```
+
+```{r}
+
+dummy <- data.frame(trends = c("Dance"), 
+                    x = c(130),
+                    y = c(4.1),
+                    label = c("Candy Shop"))
+corpus2 %>%
+  mutate(
+    sections =
+      map(
+        sections,                                    # sections or segments
+        summarise_at,
+        vars(tempo, loudness, duration),             # features of interest
+        list(section_mean = mean, section_sd = sd)   # aggregation functions
+      )
+  ) %>%
+  unnest(sections) %>%
+  ggplot(
+    aes(
+      x = tempo,
+      y = tempo_section_sd,
+      colour = trends,
+      alpha = loudness
+    )
+  ) +
+  scale_color_manual(values = c("#9FBEE1", "#1E3D60"))+ 
+  geom_point(aes(size = duration / 60)) +
+  geom_rug() +
+  theme_minimal() +
+  ylim(0, 5) +
+  facet_wrap(~trends) +
+  labs(
+    x = "Mean Tempo (bpm)",
+    y = "SD Tempo",
+    size = "Duration (min)",
+    alpha = "Volume (dBFS)"
+  ) + 
+  guides(colour = FALSE) 
 ```
 
 ***
 
-Here follows a analysis of the plots.
+Since tempo did show us a slight difference in distribution shape between the two trends, I have dissected this feature even further, by looking at the so called **section-level of tracks** from the Spotify API. 
 
+The mean tempo has the same values as the previous tempo histogram. More interestingly, we can now also look into the **standard deviation** (SD) of the tempo. It might sound like a scary word, but in this case it indicates if there was a lot of **tempo variation within a track**. The Dance tracks usually have steady tempo that doesn't change as much throughout the track. The Other tracks actually have a slightly higher SD, around 0.5. So this actually indicates that there is a little bit more variation of tempo. One obvious outlier in the Dance category is the song *Candy shop* apparently this song changes a lot tempo wise. The song with the most variation in the Other category is *Mr. Blue sky*. In addition, this track also has the highest mean tempo. 
+
+The plot also shows **different sizing** of points. These are in the **Dance** category actually **not much difference between sizes**. In the Other category, the dots are overall either slightly smaller or slightly bigger than the Dance tracks. If we look into the statistics we can see that the mean of the duration for both trends lie around 3 minutes. However, the variation is for Dance tracks 0.67, whereas for Other tracks it is 0.90. This explains why we see **more smaller and larger points** in the **Other** plot. 
+
+Lastly, the **opaqueness** of the points indicate the volume. There isn't anything that stands out as much. Although, thereis one track in the Other category that is **very transparent**. This is the *Eine Kleine Nachtmusik K. 252. Allegro* song, again it proves itself to be an odd one out in the corpus. The other noticeable transparent dot, is also located in the Other category, around a mean of 145 BPM. This is the **Monkeys spinning monkeys** song that is yet again an outlier. 
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-lboi{border-color:inherit;text-align:left;vertical-align:middle}
+.tg .tg-9wq8{border-color:inherit;text-align:center;vertical-align:middle}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+</style>
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-0pky">Trend</th>
+    <th class="tg-0pky">Feature</th>
+    <th class="tg-0pky">Mean</th>
+    <th class="tg-0pky">Standard Deviation</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-9wq8" rowspan="3"><br>Dance<br></td>
+    <td class="tg-0pky">Duration</td>
+    <td class="tg-0pky">181.04 s</td>
+    <td class="tg-0pky">40.34 s</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky" rowspan="2">Volumne</td>
+    <td class="tg-0pky" rowspan="2">-6.95 dBFS</td>
+    <td class="tg-0pky" rowspan="2">2.77 dBFS</td>
+  </tr>
+  <tr>
+  </tr>
+  <tr>
+    <td class="tg-lboi" rowspan="3">Other</td>
+    <td class="tg-0pky">Duration</td>
+    <td class="tg-0pky">179.33 s</td>
+    <td class="tg-0pky">54.55 s</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky" rowspan="2">Volume</td>
+    <td class="tg-0pky" rowspan="2">-7.93 dBFS</td>
+    <td class="tg-0pky" rowspan="2">3.86 dBFS</td>
+  </tr>
+  <tr>
+  </tr>
+</tbody>
+</table>
 
 ### Conclusion
