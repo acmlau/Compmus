@@ -298,6 +298,13 @@ corpus<- corpus %>% mutate(poprange = case_when(
 
 ### Yeah, **you've heard this song before**, but where did it come from? {data-commentary-wdith=500px}
 The corpus for this project is a playlist from Spotify. [This playlists](https://open.spotify.com/playlist/5kQyvWFk8r1y2IQEtjBfey?si=HLNnUJzYQHSVYq7ub3lbRA) is a collection of songs that are famous from TikTok - a social media app used to make short-form videos. In these 15 seconds videos, music is played and people dance, lip-sync, tell stories, make humorous memes, and do all other kinds of trends. As the spaces people normally enjoy music were impacted by the pandemic, TikTok helped fill the need for communal musical experience all over the world. Starting from the beginning of the pandemic, March 2020, TikTok gained a lot of popularity. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from [this website](https://tokboard.com/months). 
+<<<<<<< HEAD
+=======
+
+I want to find out how different these popular TikTok songs are from one another. Altogether, the genres of the songs are quite the same. So I would assume that there is a factor that is a core element to becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out what the similarities and differences are within a trend. More specifically I will be focusing on the *Dance* trend as that is the biggest on TikTok.
+
+<!-- Interesting comparison points in the corpus of this project will be the overall mood of a song. Psychologist Robert Thayer's came up with a traditional model of mood. Where songs can be categorised along the lines of energy and stress, from happy to sad and calm to energetic (Bhat et al 359). Next to these 4 categories there are also 4 sub categories e.g. Happy - energetic, Happy - calm, etc. I assume the corpus has a lot of Happy, Energetic, Happy - Energetic and a few Happy - Calm and Calm songs. The reason for that is because many songs are for funny and trendy TikTok-challenges. It is expected that the intensity for Energetic and Happy - Energetic songs are on the higher spectrum than Happy - Calm and Calm songs. Another musical component that can be looked at is the Timbre of a song. Timbre is the tonal quality of a piece created by harmonics. It is to no surprise that these will be different between moods as well. Happy, Happy - Energetic and Energetic songs will have around a medium timbre. Whereas Calm and Happy - Calm songs will most likely have a low timbre. The pitch intervals of the songs will probably vary quite a lot between the mood categories, as it is very dependent on the singer's voice, and the instruments that are used. Lastly the rhythm of songs with a Happy, Happy - Energetic and Energetic mood will most likely be high paced, whereas Calm and Calm - Happy songs will have a more relaxed and slow rhythm.  -->
+>>>>>>> 633e46c373fc8518d02418d6ad97e6ec1950a49f
 
 I want to find out how different these popular TikTok songs are from one another. Altogether, the genres of the songs are quite the same. So I would assume that there is a factor that is a core element to becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out what the similarities and differences are within a trend. More specifically I will be focusing on the *Dance* trend as that is the biggest on TikTok.
 
@@ -825,7 +832,12 @@ corpus_features <-
   mutate(pitches = map(pitches, compmus_normalise, "clr")) %>%
   mutate_at(vars(pitches, timbre), map, bind_rows) %>%
   unnest(cols = c(pitches, timbre))
+<<<<<<< HEAD
 
+=======
+```
+```{r}
+>>>>>>> 633e46c373fc8518d02418d6ad97e6ec1950a49f
 corpus_recipe <-
   recipe(
     playlist ~
@@ -849,7 +861,12 @@ corpus_recipe <-
   step_center(all_predictors()) %>%
   step_scale(all_predictors())      # Converts to z-scores.
   # step_range(all_predictors())    # Sets range to [0, 1].
+<<<<<<< HEAD
 
+=======
+```
+```{r}
+>>>>>>> 633e46c373fc8518d02418d6ad97e6ec1950a49f
 corpus_cv <- corpus_features %>% vfold_cv(5)
 ```
 ```{r}
@@ -857,7 +874,10 @@ knn_model <-
   nearest_neighbor(neighbors = 1) %>%
   set_mode("classification") %>%
   set_engine("kknn")
+<<<<<<< HEAD
 
+=======
+>>>>>>> 633e46c373fc8518d02418d6ad97e6ec1950a49f
 corpus_knn <-
   workflow() %>%
   add_recipe(corpus_recipe) %>%
@@ -872,13 +892,17 @@ corpus_knn <-
 corpus_knn %>% get_conf_mat() %>% autoplot(type = "mosaic")
 ```
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 633e46c373fc8518d02418d6ad97e6ec1950a49f
 ***
 
 So what do we know so far? We know that, features such as Valence, Energy, Danceability, Key, Duration, and Loudness cannot really tell apart if a track is specifically a Dance track or a Other track. We do know that, the distribution of Tempo gives us a bit more insight on the differences between the two trends, but that is very minimal.
 
 Here I ran some code to see if an **AI algorithm** - K-nearest neighbour (**KNN**) - was able to magically find out the differences between the two classes. The magic of the KNN algorithm happens when it has found a pattern within the data that you give it to identify different classes. Here the data were the available Spotify API features of tracks.
 
+<<<<<<< HEAD
 The plot shows how well the algorithm predicted the correct trends. When we look at the X-axis we see the label **Truth** which means that the songs in the left column all correspond to Dance tracks and on the right column to Other tracks. On the Y-axis we have the **Predicted** label. So we see that for the Dance tracks, a little bit **more than half** was **correctly predicted as Dance**, and the rest as Other. Similarly, we see that the Truth column for Other tracks also **has over half** of the tracks **predicted correctly** with the corresponding track. Overall the algorithm performed with an **accuracy** around **60%** which isn't very convincing to say that there are actual patterns found to indicate different trends. 
 
 ### What? I cannot see the wood for the trees! I am lost in the **forest**.
@@ -963,3 +987,121 @@ And we've seen that there is **no real distinction** between the trends Dance VS
 
 Hopefully I have managed to convince about that with my findings. Thank you for reading, and never stop grooving on the TikTok songs. 
 
+=======
+The plot shows how well the algorithm predicted the correct trends. When we look at the X-axis we see the label **Truth** which means that the songs in the left column all correspond to Dance tracks and on the right column to Other tracks. On the Y-axis we have the **Predicted** label. So we see that for the Dance tracks, a little bit more than half was correctly predicted as Dance, and the rest as Other. So based on this you would be able to say that it **predicted pretty well** for Dance tracks. However, if we look at the Truth column for Other tracks, we can see that the majority of those songs were **also predicted as Dance trakcs**. 
+
+<!-- ### Wow I cannot choose man, help me grow this tree and maybe we can figure it out. -->
+
+```{r}
+# tree_model <-
+#   decision_tree() %>%
+#   set_mode("classification") %>% 
+#   set_engine("C5.0")
+# corpus_tree <- 
+#   workflow() %>% 
+#   add_recipe(corpus_recipe) %>% 
+#   add_model(tree_model) %>% 
+#   fit_resamples(
+#     corpus_cv, 
+#     control = control_resamples(save_pred = TRUE)
+#   )
+# corpus_tree %>% get_pr()
+```
+
+```{r}
+# workflow() %>%
+#   add_recipe(corpus_recipe) %>%
+#   add_model(tree_model) %>%
+#   fit(corpus_features) %>%
+#   pluck("fit", "fit", "fit") %>%
+#   summary()
+```
+
+```{r}
+# forest_model <-
+#   rand_forest() %>%
+#   set_mode("classification") %>% 
+#   set_engine("ranger", importance = "impurity")
+# corpus_forest <- 
+#   workflow() %>% 
+#   add_recipe(corpus_recipe) %>% 
+#   add_model(forest_model) %>% 
+#   fit_resamples(
+#     corpus_cv, 
+#     control = control_resamples(save_pred = TRUE)
+#   )
+```
+
+```{r}
+# corpus_forest %>% get_pr()
+```
+
+```{r}
+# workflow() %>%
+#   add_recipe(corpus_recipe) %>%
+#   add_model(forest_model) %>%
+#   fit(corpus_features) %>%
+#   pluck("fit", "fit", "fit") %>%
+#   ranger::importance() %>%
+#   enframe() %>%
+#   mutate(name = fct_reorder(name, value)) %>%
+#   ggplot(aes(name, value)) +
+#   geom_col() +
+#   coord_flip() +
+#   theme_minimal() +
+#   labs(x = NULL, y = "Importance")
+```
+```{r}
+# what <- corpus_features %>%
+#   filter(playlist == "Dance") 
+# 
+# 
+# gaa <- corpus_features %>%
+#   filter(playlist == "Other")
+# 
+# ac_12 <-corpus_features %>%
+#   ggplot(aes(x = acousticness, y = c12, colour = playlist, size = energy)) +
+#   geom_point(alpha = 0.8) +
+#   scale_color_viridis_d() +
+#   labs(
+#     x = "Acousticness",
+#     y = "12th Timbre component",
+#     size = "Energy",
+#     colour = "Playlist",
+#     title = "Higest importance"
+#   ) + 
+#   geom_encircle(aes(group = playlist))
+# 
+# 
+# temp_10 <- corpus_features %>%
+#   ggplot(aes(x = E, y = F, colour = playlist, size = energy)) +
+#   geom_point(alpha = 0.8) +
+#   scale_color_viridis_d() +
+#   labs(
+#     x = "tempo",
+#     y = "10th Timbre component",
+#     size = "Energy",
+#     colour = "Playlist",
+#     title= "Lowest importance"
+#   ) + 
+#   geom_encircle(aes(group = playlist))
+# 
+# my_layout <- rbind(c(1,2), c(1,2))
+# 
+# grid.arrange(grobs = c(list(ac_12), list(temp_10)), layout_matrix = my_layout,
+#              top = textGrob("Random forest",gp=gpar(fontsize=10,font=3)))
+```
+
+
+<!-- ***  -->
+
+<!-- | Class | Precision | Recall | -->
+<!-- |-------|-----------|--------| -->
+<!-- | Dance | 0.590     | 0.750  | -->
+<!-- | Other | 0.593     | 0.410  | -->
+
+<!-- Expected *Highest importance* plot to have **more distinction** between the two trends *Dance* and *Other*. For the *Lowest importance* plot excepted to have  **no distinction** between the two trends. However, as you can see bu the encircled parts. there is a lot of overlap between *Dance* and *Other*, hence this classification does not really work, despite having relatively high importance for Acoustiness and the 12th timbre component (bove above a score of 2.0). However from the table we can also see that the classification model did not managed to find a pattern that makes tracks specifically a Dance or Other song.  --> 
+
+
+### Conclusion
+>>>>>>> 633e46c373fc8518d02418d6ad97e6ec1950a49f
