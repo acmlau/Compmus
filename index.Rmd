@@ -13,7 +13,7 @@ output:
 # output: html_document
 ---
 ```{r, include=FALSE}
-knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+# knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 ```
 ```{r, echo = FALSE, result = FALSE, warning = FALSE}
 library(spotifyr)
@@ -268,117 +268,7 @@ corpus<- corpus %>% mutate(poprange = case_when(
 <!-- So yeah we cannot really predict what songs are supposed to fall into the *Dance* category and which fall into the *Other* category. -->
 
 
-<!-- ### Wow I cannot choose man, help me grow this tree and maybe we can figure it out. -->
 
-```{r}
-# tree_model <-
-#   decision_tree() %>%
-#   set_mode("classification") %>% 
-#   set_engine("C5.0")
-# corpus_tree <- 
-#   workflow() %>% 
-#   add_recipe(corpus_recipe) %>% 
-#   add_model(tree_model) %>% 
-#   fit_resamples(
-#     corpus_cv, 
-#     control = control_resamples(save_pred = TRUE)
-#   )
-# corpus_tree %>% get_pr()
-```
-
-```{r}
-# workflow() %>%
-#   add_recipe(corpus_recipe) %>%
-#   add_model(tree_model) %>%
-#   fit(corpus_features) %>%
-#   pluck("fit", "fit", "fit") %>%
-#   summary()
-```
-
-```{r}
-# forest_model <-
-#   rand_forest() %>%
-#   set_mode("classification") %>% 
-#   set_engine("ranger", importance = "impurity")
-# corpus_forest <- 
-#   workflow() %>% 
-#   add_recipe(corpus_recipe) %>% 
-#   add_model(forest_model) %>% 
-#   fit_resamples(
-#     corpus_cv, 
-#     control = control_resamples(save_pred = TRUE)
-#   )
-```
-
-```{r}
-# corpus_forest %>% get_pr()
-```
-
-```{r}
-# workflow() %>%
-#   add_recipe(corpus_recipe) %>%
-#   add_model(forest_model) %>%
-#   fit(corpus_features) %>%
-#   pluck("fit", "fit", "fit") %>%
-#   ranger::importance() %>%
-#   enframe() %>%
-#   mutate(name = fct_reorder(name, value)) %>%
-#   ggplot(aes(name, value)) +
-#   geom_col() +
-#   coord_flip() +
-#   theme_minimal() +
-#   labs(x = NULL, y = "Importance")
-```
-```{r}
-# what <- corpus_features %>%
-#   filter(playlist == "Dance") 
-# 
-# 
-# gaa <- corpus_features %>%
-#   filter(playlist == "Other")
-# 
-# ac_12 <-corpus_features %>%
-#   ggplot(aes(x = acousticness, y = c12, colour = playlist, size = energy)) +
-#   geom_point(alpha = 0.8) +
-#   scale_color_viridis_d() +
-#   labs(
-#     x = "Acousticness",
-#     y = "12th Timbre component",
-#     size = "Energy",
-#     colour = "Playlist",
-#     title = "Higest importance"
-#   ) + 
-#   geom_encircle(aes(group = playlist))
-# 
-# 
-# temp_10 <- corpus_features %>%
-#   ggplot(aes(x = E, y = F, colour = playlist, size = energy)) +
-#   geom_point(alpha = 0.8) +
-#   scale_color_viridis_d() +
-#   labs(
-#     x = "tempo",
-#     y = "10th Timbre component",
-#     size = "Energy",
-#     colour = "Playlist",
-#     title= "Lowest importance"
-#   ) + 
-#   geom_encircle(aes(group = playlist))
-# 
-# my_layout <- rbind(c(1,2), c(1,2))
-# 
-# grid.arrange(grobs = c(list(ac_12), list(temp_10)), layout_matrix = my_layout,
-#              top = textGrob("Random forest",gp=gpar(fontsize=10,font=3)))
-```
-
-
-<!-- ***  -->
-
-<!-- | Class | Precision | Recall | -->
-<!-- |-------|-----------|--------| -->
-<!-- | Dance | 0.590     | 0.750  | -->
-<!-- | Other | 0.593     | 0.410  | -->
-
-<!-- Expected *Highest importance* plot to have **more distinction** between the two trends *Dance* and *Other*. For the *Lowest importance* plot excepted to have  **no distinction** between the two trends. However, as you can see bu the encircled parts. there is a lot of overlap between *Dance* and *Other*, hence this classification does not really work, despite having relatively high importance for Acoustiness and the 12th timbre component (bove above a score of 2.0). However from the table we can also see that the classification model did not managed to find a pattern that makes tracks specifically a Dance or Other song.  -->
 
 <!-- ### Homework week 10 - Tempogram -->
 
@@ -405,62 +295,38 @@ corpus<- corpus %>% mutate(poprange = case_when(
 
 <!-- The tempogram of the song *Play Date* by Melanie Martinez, shows that there are small tempo variations throughout the entire song. Very notable is the change in tempo between 132 - 136 seconds(2:12 - 2:16). The part in the song corresponding to this time frame is actually almost silent. It is surprising that Spotify labels this silent part to have a high tempo. At the end of this time frame slow beating comes in again, hence we see the yellow line in the time frame go down again. Once after we see that the tempo goes back to the usual. At the very end, the song slows down and fades out, this corresponds to the last few seconds where we see that the tempogram is slightly lighter again.  -->
 
-<!-- ### Homework week 10 Tempogram -->
 
-```{r}
-# rhythm_thief <- get_tidy_audio_analysis("78HutMlGCBJUIv6ckenQxV")
-```
-```{r}
-# rhythm_thief_tempogram_yes_cyclic <- rhythm_thief %>%
-#   tempogram(window_size = 8, hop_size = 1, cyclic = TRUE) %>%
-#   ggplot(aes(x = time, y = bpm, fill = power)) +
-#   geom_raster() +
-#   scale_fill_viridis_c(guide = "none") +
-#   labs(x = "Time (s)", y = "Tempo (BPM)", title = "Rhythm Thief but Cursed - Headass") +
-#   theme_classic()
-# 
-# rhythm_thief_tempogram_yes_cyclic
-```
-
-<!-- ***  -->
-
-<!-- This is a very strange song which consists of random sounds put together. Surprisingly, the tempo stays very consistent throughout the entire track. -->
-
-
-
-<!-- ### Homeowork 9 part 3 -->
-
-```{r}
-# savage %>% 
-#   compmus_match_pitch_template(
-#     chord_templates,         # Change to chord_templates if desired
-#     method = "euclidean",  # Try different distance metrics
-#     norm = "manhattan"     # Try different norms
-#   ) %>%
-#   ggplot(
-#     aes(x = start + duration / 2, width = duration, y = name, fill = d)
-#   ) +
-#   geom_tile() +
-#   scale_fill_viridis_c(guide = "none") +
-#   theme_minimal() +
-#   labs(x = "Time (s)", y = "", title = "Savage - Megan Thee Stallion") + 
-#   geom_hline(yintercept = "Eb:min", colour = "white")
-```
-
-<!-- ***  -->
-
-<!-- Throughout the entire song two chords are constantly played namely **Eb7** and **E7**. The **Eb7** chord is the most dark throughout the entire track on the chordogram. We can also see that the **E7** chord is every now and then dark. It is not strange that the **B7** is also darkly coloured throughout the almost the entire track because an as it is in harmony with the **E7** chord.  -->
-
-### Yeah, **you've heard this song before**, but where did it come from?
+### Yeah, **you've heard this song before**, but where did it come from? {data-commentary-wdith=500px}
 The corpus for this project is a playlist from Spotify. [This playlists](https://open.spotify.com/playlist/5kQyvWFk8r1y2IQEtjBfey?si=HLNnUJzYQHSVYq7ub3lbRA) is a collection of songs that are famous from TikTok - a social media app used to make short-form videos. In these 15 seconds videos, music is played and people dance, lip-sync, tell stories, make humorous memes, and do all other kinds of trends. As the spaces people normally enjoy music were impacted by the pandemic, TikTok helped fill the need for communal musical experience all over the world. Starting from the beginning of the pandemic, March 2020, TikTok gained a lot of popularity. Hence the songs from the corpus will be the top 10 songs on TikTok from March 2020 till December 2020. The top songs are acquired from [this website](https://tokboard.com/months). 
 
 I want to find out how different these popular TikTok songs are from one another. Altogether, the genres of the songs are quite the same. So I would assume that there is a factor that is a core element to becoming a suitable TikTok song. In addition, as TikTok videos have a wide variety of trends, I want to find out what the similarities and differences are within a trend. More specifically I will be focusing on the *Dance* trend as that is the biggest on TikTok.
 
-<!-- Interesting comparison points in the corpus of this project will be the overall mood of a song. Psychologist Robert Thayer's came up with a traditional model of mood. Where songs can be categorised along the lines of energy and stress, from happy to sad and calm to energetic (Bhat et al 359). Next to these 4 categories there are also 4 sub categories e.g. Happy - energetic, Happy - calm, etc. I assume the corpus has a lot of Happy, Energetic, Happy - Energetic and a few Happy - Calm and Calm songs. The reason for that is because many songs are for funny and trendy TikTok-challenges. It is expected that the intensity for Energetic and Happy - Energetic songs are on the higher spectrum than Happy - Calm and Calm songs. Another musical component that can be looked at is the Timbre of a song. Timbre is the tonal quality of a piece created by harmonics. It is to no surprise that these will be different between moods as well. Happy, Happy - Energetic and Energetic songs will have around a medium timbre. Whereas Calm and Happy - Calm songs will most likely have a low timbre. The pitch intervals of the songs will probably vary quite a lot between the mood categories, as it is very dependent on the singer's voice, and the instruments that are used. Lastly the rhythm of songs with a Happy, Happy - Energetic and Energetic mood will most likely be high paced, whereas Calm and Calm - Happy songs will have a more relaxed and slow rhythm.  -->
+Lastly, a final note needs to be made on the length of the TikTok videos. These videos can only be up to 15 seconds long. However, in this research the full length of the songs are used. The motivation behind this is because 15 seconds do not allow for a thorough and detailed analysis between the songs. 
+
+**Atypical songs in the corpus**
+
+* *Eine kleine Nachtmusik K. 252 Allegro* - Wolfgang Amadeus, stands out a lot from the rest. It is the only classical piece in the corpus and is composed in the year 1787. 
+* *Steven Universe* - L.Dre: one of the few slow paced songs, and it is only 2.14 minutes long  without lyrics. 
+* *Monkeys Spinning Monkeys* - Keving MacLeod, this is one of the few songs that have no lyrics and it is also very short.
+* Funny to see that from December there are seasonal songs e.g. *All I Want for Christmas is You* - Mariah Carey and *Jinge Bell Rock* - Bobby Helms. 
+
+**Note**
+The Song Titles in the table are copied from [the website](https://tokboard.com/months)
+
+***
+
+Here is the playlist that represents the corpus:
+<iframe src="https://open.spotify.com/embed/playlist/5kQyvWFk8r1y2IQEtjBfey" width="280" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+**Making the playlist** <br>
+If a song in the top 10 of the month was not available on Spotify, the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs with a total duration of 4 hours and 9 minutes. 
+
+**Setting up the trends per song** <br>
+The majority of the songs are associated with dance challenges, hence these songs are categorised under the *Dance* trend. All the other trends are referred to as *Other*.
 
 <details>
-<summary>**↓Specification of the corpus selection↓<**/summary>
-TikTok is a very creative platform where people use all kinds of remix songs which aren't accessible on Spotify although they are very popular songs. In the following table popular songs that were *not* listed on Spotify are shown.
+<summary>**↓Specification of the corpus selection↓**</summary>
+TikTok is a very creative platform where people use all kinds of remix songs. Some of which are made by not well known artists. This leads to that some remixes aren't accessible on Spotify. In the following table popular songs that were *not* listed on Spotify are shown. Here the month indicates when they were popular on TikTok and the Rank shows the popularity rank of the song in that month. This information is acquired from [this website](https://tokboard.com/months).
 
 | Song Title                                | Month    | Rank |
 |-------------------------------------------|----------|:----:|
@@ -499,30 +365,7 @@ Some songs are listed multiple times in the top ten of the months, these are lis
 
 </details>
 
-Lastly, a final note needs to be made on the length of the TikTok videos. These videos can only be up to 15 seconds long. However, in this research the full length of the songs are used. The motivation behind this is because 15 does not allow for a thoroughly and detailed analysis between the songs. 
-
-**Atypical songs in the corpus**
-
-* *Eine kleine Nachtmusik K. 252 Allegro* - Wolfgang Amadeus, stands out a lot from the rest. It is the only classical piece in the corpus and is composed in the year 1787. 
-* *Steven Universe* - L.Dre: one of the few slow paced songs, and it is only 2.14 minutes long  without lyrics. 
-* *Monkeys Spinning Monkeys* - Keving MacLeod, one of the few songs that have no lyrics also very short 
-* Funny to see that from December there are seasonal songs e.g. *All I Want for Christmas is You* - Mariah Carey and *Jinge Bell Rock* - Bobby Helms. 
-
-**Note**
-The Song Titles in the table are copied from [the website](https://tokboard.com/months)
-
-***
-
-Here is the playlist that represents the corpus:
-<iframe src="https://open.spotify.com/embed/playlist/5kQyvWFk8r1y2IQEtjBfey" width="280" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-**Making the playlist** <br>
-If a song in the top 10 of the month was not available on Spotify, the song is skipped and the 11th song was added. If a song was repeatedly listed in the top 10 the song was skipped. This resulted in a total of 83 songs a total of 4 hours and 9 minutes. 
-
-**Setting up the trends per song** <br>
-The majority of the songs are associated with dance challenges, hence these songs are categorised under the *Dance* trend. All the other trends are referenced as *Other*.
-
-### Are you in the **mood**, because I certainly am. Here is how TikTok plays with your **Emotions**{data-commentary-width=500px}
+### Are you in the **mood**, because I certainly am. Here is how TikTok plays with your **Emotions**.{data-commentary-width=500px}
 
 ```{r}
 
@@ -564,10 +407,9 @@ emotion_plot <- ggplot(sharedCorpus, aes(x = valence, y = energy, size = danceab
   annotate("text", 0.05, 0.95, label = "Angry", color = "black", alpha = 0.7, fontface="bold") +
   annotate("text", 0.95, 0.05, label = "Calm", color = "black", alpha = 0.7, fontface="bold") +
   annotate("text", 0.95, 0.95, label = "Happy", color = "black", alpha = 0.7, fontface="bold") +
-  labs(x = "Valence", y = "Energy", title = "The mood of the song", shape = "Trends", color = "Trends", label = "Track") +
-  guides(size = FALSE)
+  labs(x = "Valence", y = "Energy", title = "The mood of the song", shape = "Trends", color = "Trends", label = "Track")
 
-bscols(ggplotly(emotion_plot, tooltip = "Track"))
+bscols(ggplotly(emotion_plot, tooltip = c("Track", "danceability")))
 
 ```
 
@@ -582,11 +424,11 @@ So how positive and intense are the songs in the corpus? We can gauge this by us
 
 Whenever I am endlessly scrolling on TikTok, I always get a good laugh out of it or I get really pumped up by all the good vibes from the videos. Hence, I'd assumed that the most to least songs with a certain emotion would be Happy, Calm, Sad, and Angry. As expected, **the amount of Happy songs is the largest**. Contrasting, I am surprised about Angry being second place. Maybe the Spotify API's valence does not exactly line up with the valence as described by the model.
 
-Hovering over the plot, we can identify the name of tracks. In the Sad quadrant we see a song with a very low Energy, *Steven Universe*. As we'd indicated, this is **one of our atypical songs** in the corpus. Similarly, in the Calm quadrant, we have *Monkeys spinning Monkeys* which we'd also indicated as an atypical song. I got to admit this song is something else. You know, when you have a favourite song and you play it **over and over**. Well, with this monkey song, you don't want to do that. At first the song can be quite calming indeed, but to listen to the entire 2:05 minutes? It will drive you insane and the song would better fit in the Angry quadrant.
+Hovering over the plot, we can identify the name of the tracks. In the Sad quadrant we see a song with a very low Energy, *Steven Universe*. As we'd indicated, this is **one of our atypical songs** in the corpus. Similarly, in the Calm quadrant, we have *Monkeys spinning Monkeys* which we'd also identified as an atypical song. I got to admit this song is something else. You know, when you have a favourite song and you play it **over and over**. Well, with this monkey song, you don't want to do that. At first the song can be quite calming indeed, but to listen to the entire 2:05 minutes? It will drive you insane and the song would better fit in the Angry quadrant.
 
-Focusing on the different trends, we can see that the majority of Happy sons are Dance songs. Sad songs fall more often in the Other trend. Lastly, Angry and Calm songs have about a 1:1 distribution regarding trends. 
+Focusing on the different trends, we can see that the majority of Happy songs are Dance songs. Sad songs fall more often in the Other trend. Lastly, Angry and Calm songs have about a 1:1 distribution regarding trends. 
 
-And you might wonder, why are some points in the plot larger then others? Good quesiton. The **size indicates the danceability** - another feature of the Spotify API - of the song. A quick glance shows us that the sizes aren't that much different between the two trends. 
+And you might wonder, why are some dots larger then others? Good question. The **size indicates the danceability** - another feature of the Spotify API - of the song. A quick glance shows us that the sizes aren't that much different between the two trends. 
 
 ### Okay but what about those **15 seconds**, are they any **different** than the rest of the song? A glance at two songs based on timbre.{data-commentary-width=500}
 
@@ -610,29 +452,6 @@ lemonade <-
         method = "mean", norm = "manhattan"              # Change summary & norm.
       )
   )
-
-# lemon_ssm_pitch <- lemonade %>%
-#   compmus_self_similarity(pitches, "euclidean") %>%
-#   ggplot(
-#     aes(
-#       x = xstart + xduration / 2,
-#       width = xduration,
-#       y = ystart + yduration / 2,
-#       height = yduration,
-#       fill = d
-#     )
-#   ) +
-#   geom_tile() +
-#   coord_fixed() +
-#   scale_fill_viridis_c(guide = "none") +
-#   theme_classic() +
-#   labs(x = "", y = "", title = "Lemonade Pitches") +
-#   # annotate("text", 27.5, 7, label = "Video", color = "white", size = 3, fontface="bold") + 
-#   geom_segment(aes(x = 24, xend = 24, y=1, yend= 192), col = 'white') +
-#   geom_segment(aes(x = 31, xend = 31, y=1, yend= 192), col = 'white') + 
-#   annotate("segment", x = 55, xend = 28, y = 50, yend = 50, colour = 'white',
-#            arrow = arrow(angle = 25, type = "closed", length = unit(2, "mm"))) + 
-#   annotate("text", x = 85, 50, label = "Video", color ="white", fontface = "bold", size = 3)
 
 lemon_ssm_timbre <- lemonade %>%
   compmus_self_similarity(timbre, "euclidean") %>%
@@ -677,30 +496,6 @@ wipe <-
       )
   )
 
-
-# wipe_ssm_pitch <- wipe %>%
-#   compmus_self_similarity(pitches, "euclidean") %>% 
-#   ggplot(
-#     aes(
-#       x = xstart + xduration / 2,
-#       width = xduration,
-#       y = ystart + yduration / 2,
-#       height = yduration,
-#       fill = d
-#     )
-#   ) +
-#   geom_tile() +
-#   coord_fixed() +
-#   scale_fill_viridis_c(guide = "none") +
-#   theme_classic() +
-#   labs(x = "", y = "", title = "#WIPEITDOWN Pitches") +
-#   # annotate("text", 7.5, 7, label = "Video", color = "white", size = 3, fontface="bold") + 
-#   geom_vline(xintercept = 1, color = "white") + 
-#   geom_vline(xintercept = 15, color = "white") + 
-#   annotate("segment", x = 20, xend = 7.5, y = 50, yend = 50, colour = 'white',
-#            arrow = arrow(angle = 25, type = "closed", length = unit(2, "mm"))) +
-#   annotate("text", x = 35, 50, label = "Video", color ="white", size = 3, fontface = "bold")
-
 wipe_ssm_timbre <- wipe %>%
   compmus_self_similarity(timbre, "euclidean") %>% 
   ggplot(
@@ -732,7 +527,7 @@ grid.arrange(lemon_ssm_timbre, wipe_ssm_timbre, ncol = 2, nrow = 1,
 
 Now that we've looked at the emotions of the songs, we are going to explore the timbre of two different songs. Timbre is often use as an indicator why certain sounds sound differently. 
 
-I've chosen the tracks *Lemonade* by Internet Money and *#WIPEITDOWN* by BMW KENNY. I picked these two songs as they had similar values for Spotify's features and are both archetypes as TikTok songs. The *Lemonade* track is associated with a Dance trend, whereas the *#WIPEITDOWN* is associated with Other trend. 
+I've chosen the tracks *Lemonade* by Internet Money and *#WIPEITDOWN* by BMW KENNY. I picked these two songs as they had similar values for Spotify's features and are both archetypes as TikTok songs. The *Lemonade* track is associated with the Dance trend, whereas the *#WIPEITDOWN* is associated with the Other trend. 
 
 As we all might know, TikTok consists of many short videos typically of 15 seconds. What I wanted to find out with these plots, is if those specific ±15 seconds are special within a track. For this we'll dive a bit deeper into these Self-similarity matices (SSMs).
 
@@ -745,19 +540,6 @@ Moving on to our SSM for *#WIPEITDOWN*, we see a very clear **checkerboard patte
 ```{r}
 classical <-
   get_tidy_audio_analysis("2mRUmSG3XGjFloqgAT2UJN") %>%
-  compmus_align(bars, segments) %>%
-  select(bars) %>%
-  unnest(bars) %>%
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      )
-  )
-
-savage <-
-  get_tidy_audio_analysis("4Oun2ylbjFKMPTiaSbbCih") %>%
   compmus_align(bars, segments) %>%
   select(bars) %>%
   unnest(bars) %>%
@@ -798,7 +580,7 @@ classical %>%
 
 Unlike *Lemonade* and *#WIPEITDOWN* as archetypes of the corpus, *Eine kleine Nachtmusic K. 525 Allegro* by Wolfgang Amadeus Mozart is a special snowflake as it is the only track that falls within the genre of **classical music**. So it isn't quite in tune with all the other TikTok songs. On this page, we will look if the Spotify API's key estimation is properly adjusted to the actual keys of the song.
 
-On the [Wikipedia website](https://en.wikipedia.org/wiki/Eine_kleine_Nachtmusik) of this well-known song, it states that this piece has four movements i.e. G major - D major - Ambiguous key - G major, which are indicated with horizontal white stripes. However, if we look in the keygram we see that the piece is found to be written in Emajor, the red line. The Emajor key is most similar to C# minor - the duller red line. However, this chord isn't that much darker than all the other keys. A contrasting part starts at time steps 150 and ends at 195. We see that the keys F major, Eb major and F# minor (short orange lines) are darker coloured within that time frame. Not surprising, as the recapitulation of the classical piece is played. The recapitulation is often the general melody, slightly modified and often played in a **different key** 
+On the [Wikipedia website](https://en.wikipedia.org/wiki/Eine_kleine_Nachtmusik) of this well-known song, it states that this piece has four movements i.e. G major - D major - Ambiguous key - G major, which are indicated with horizontal white stripes. However, if we look in the keygram we see that the piece is found to be written in E major, the red line. The E major key is most similar to C# minor - the duller red line. However, this chord isn't that much darker than all the other keys. A contrasting part starts at time steps 150 and ends at 195. We see that the keys F major, Eb major and F# minor (short orange lines) are darker coloured within that time frame. Not surprising, as the recapitulation of the classical piece is played. The recapitulation is often the general melody, slightly modified and often played in a **different key**. 
 
 Overall there are several reasons why this key estimation did not work out as expected. For starters, it could be the case that the song is **not pitched exactly around 440 Hz**, this offsets the estimation for Spotify's API. Secondly, string instruments deal with **vibrato**. So this means that there is no exact frequency, rather it is blurred as there is a constant modulation in frequency. For key estimation, one needs to look at the different pitches of a song. Meaning, the combination of 4 string instruments that don't play the perfect pitch of notes - due to vibrato - can also result in the Spotify API being incapable of the key estimation of this particular song. 
 
@@ -874,11 +656,11 @@ grid.arrange(key_hist, what, nrow =2, ncol = 1)
 
 Zooming out from the *Eine Kleine Nachtmusik K. 525. Allegro* track, let's have a look at the over usage of keys in the corpus. Given the trends in the corpus, these normalised histograms are made based on the key that was found by the Spotify AP, which can be seen on the first row. 
 
-Overall we can see that there is quite some similarity between the different trends. For example both trends indicate that within the trend most songs have either a C# or a G key. Moreover the majority of the keys used in both trend categories are A#, B, C, C#, G, and G# which all have a score of higher than 0.075 (purple line). The only huge dissimilarity between the trends that can be seen are within the key D: Dance tracks have a score of 0.1125 score whereas for Other tracks have only a 0.023 score. So just like the features Valence, Energy and Danceability from our emotions graph, the **Key** feature also has **no clear distinction** between the two trends. 
+Overall we can see that there is quite some similarity between the different trends. For example both trends indicate that within the trend most songs have either a C# or a G key. Moreover the majority of the keys used in both trend categories are A#, B, C, C#, G, and G# which all have a score of higher than 0.075 (purple line). The only huge dissimilarity between the trends that can be seen are within the key F: Dance tracks have a score of 0.05 score whereas for Other tracks a score above 0.15. So just like the features Valence, Energy and Danceability from our emotions graph, the **Key** feature also has **no clear distinction** between the two trends. 
 
 Luckily, there are still some other features available. The second row of plot shows a histogram of the different tempos in the corpus split up by trend. In general, the majority of the songs should be around [the preferred tempo](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.465.8019&rep=rep1&type=pdf) of 120-130 BPM. For both plots the mean is indicated with a purple line along with the respective mean of tempo. Although the means are quite close to one another, the distribution is quite different. We can see that the Dance tracks have a distribution similar to a Normal distribution. The Other tracks are more uniformly distributed. This means that we have found our **first difference** based on **tempo** between the two trends!
 
-### A deep dive into **tempo**, **duration** and **volume** {data-commentary-width=500px}
+### A deep dive into **tempo**, **duration** and **volume**.{data-commentary-width=500px}
 
 ```{r}
 mar <-get_playlist_audio_features("thesoundsofspotify","0IIt2QOYxRawDHQbZ8ln3M") %>%  add_audio_analysis()
@@ -921,7 +703,6 @@ corpus2$trend = c("dance","dance","dance","dance","transformation", "random", "d
 corpus2 <- corpus2 %>%
   mutate(trends = ifelse(trend == "dance", "Dance", "Other"))
 ```
-
 ```{r}
 
 dummy <- data.frame(trends = c("Dance"), 
@@ -966,11 +747,11 @@ corpus2 %>%
 
 Since tempo did show us a slight difference in distribution shape between the two trends, I have dissected this feature even further, by looking at the so called **section-level of tracks** from the Spotify API. 
 
-The mean tempo has the same values as the previous tempo histogram. More interestingly, we can now also look into the **standard deviation** (SD) of the tempo. It might sound like a scary word, but in this case it indicates if there was a lot of **tempo variation within a track**. The Dance tracks usually have steady tempo that doesn't change as much throughout the track. The Other tracks actually have a slightly higher SD, around 0.5. So this actually indicates that there is a little bit more variation of tempo. One obvious outlier in the Dance category is the song *Candy shop* apparently this song changes a lot tempo wise. The song with the most variation in the Other category is *Mr. Blue sky*. In addition, this track also has the highest mean tempo. 
+The mean tempo has the same values as the previous tempo histogram. More interestingly, we can now also look into the **standard deviation** (SD) of the tempo. It might sound like a scary word, but in this case it indicates if there was a lot of **tempo variation within a track**. The Dance tracks usually have steady tempo that doesn't change as much throughout the track. The Other tracks actually have a slightly higher SD, around 0.5. So this actually indicates that there is a little bit more variation in tempo. One obvious outlier in the Dance category is the song *Candy shop*, apparently this song changes a lot tempo wise. The song with the most variation in the Other category is *Mr. Blue sky*. In addition, this track also has the highest mean tempo. 
 
-The plot also shows **different sizing** of points. These are in the **Dance** category actually **not much difference between sizes**. In the Other category, the dots are overall either slightly smaller or slightly bigger than the Dance tracks. If we look into the statistics we can see that the mean of the duration for both trends lie around 3 minutes. However, the variation is for Dance tracks 0.67, whereas for Other tracks it is 0.90. This explains why we see **more smaller and larger points** in the **Other** plot. 
+The plot also shows **different sizing** of points. In the **Dance** category, there actually is **not much difference between sizes**. In the Other category, the dots are overall either slightly smaller or slightly bigger than the Dance tracks. If we look into the statistics, we can see that the mean of the duration for both trends lies around 3 minutes. However, the variation for Dance tracks is 0.67, whereas for Other tracks it is 0.90. This explains why we see **more smaller and larger points** in the **Other** plot. 
 
-Lastly, the **opaqueness** of the points indicate the volume. There isn't anything that stands out as much. Although, thereis one track in the Other category that is **very transparent**. This is the *Eine Kleine Nachtmusik K. 252. Allegro* song, again it proves itself to be an odd one out in the corpus. The other noticeable transparent dot, is also located in the Other category, around a mean of 145 BPM. This is the **Monkeys spinning monkeys** song that is yet again an outlier. 
+Lastly, the **opaqueness** of the points indicates the volume. There isn't anything that stands out as much. Although, there is one track in the Other category that is **very transparent**. This is the *Eine Kleine Nachtmusik K. 252. Allegro* song, again it proves itself to be an odd one out in the corpus. The other noticeable transparent dot, is also located in the Other category, around a mean of 145 BPM. This is the **Monkeys spinning monkeys** song that is yet again an outlier. 
 
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
@@ -1021,4 +802,164 @@ Lastly, the **opaqueness** of the points indicate the volume. There isn't anythi
 </tbody>
 </table>
 
-### Conclusion
+### Okay... So is there anything specific about these trends? Tell me what is the *trend* of this TikTok song?
+
+```{r}
+corpus_features <-
+  corpus %>%  # For your portfolio, change this to the name of your corpus.
+  add_audio_analysis() %>%
+  mutate(
+    playlist = factor(trends),
+    segments = map2(segments, key, compmus_c_transpose),
+    pitches =  map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      ),
+    timbre =
+      map(
+        segments,
+        compmus_summarise, timbre,
+        method = "mean",
+      )
+  ) %>%
+  mutate(pitches = map(pitches, compmus_normalise, "clr")) %>%
+  mutate_at(vars(pitches, timbre), map, bind_rows) %>%
+  unnest(cols = c(pitches, timbre))
+
+corpus_recipe <-
+  recipe(
+    playlist ~
+      danceability +
+      energy +
+      loudness +
+      speechiness +
+      acousticness +
+      instrumentalness +
+      liveness +
+      valence +
+      tempo +
+      duration +
+      C + `C#|Db` + D + `D#|Eb` +
+      E + `F` + `F#|Gb` + G +
+      `G#|Ab` + A + `A#|Bb` + B +
+      c01 + c02 + c03 + c04 + c05 + c06 +
+      c07 + c08 + c09 + c10 + c11 + c12,
+    data = corpus_features,          # Use the same name as the previous block.
+  ) %>%
+  step_center(all_predictors()) %>%
+  step_scale(all_predictors())      # Converts to z-scores.
+  # step_range(all_predictors())    # Sets range to [0, 1].
+
+corpus_cv <- corpus_features %>% vfold_cv(5)
+```
+```{r}
+knn_model <-
+  nearest_neighbor(neighbors = 1) %>%
+  set_mode("classification") %>%
+  set_engine("kknn")
+
+corpus_knn <-
+  workflow() %>%
+  add_recipe(corpus_recipe) %>%
+  add_model(knn_model) %>%
+  fit_resamples(
+    corpus_cv,
+    control = control_resamples(save_pred = TRUE)
+  )
+```
+
+```{r}
+corpus_knn %>% get_conf_mat() %>% autoplot(type = "mosaic")
+```
+
+
+***
+
+So what do we know so far? We know that, features such as Valence, Energy, Danceability, Key, Duration, and Loudness cannot really tell apart if a track is specifically a Dance track or a Other track. We do know that, the distribution of Tempo gives us a bit more insight on the differences between the two trends, but that is very minimal.
+
+Here I ran some code to see if an **AI algorithm** - K-nearest neighbour (**KNN**) - was able to magically find out the differences between the two classes. The magic of the KNN algorithm happens when it has found a pattern within the data that you give it to identify different classes. Here the data were the available Spotify API features of tracks.
+
+The plot shows how well the algorithm predicted the correct trends. When we look at the X-axis we see the label **Truth** which means that the songs in the left column all correspond to Dance tracks and on the right column to Other tracks. On the Y-axis we have the **Predicted** label. So we see that for the Dance tracks, a little bit **more than half** was **correctly predicted as Dance**, and the rest as Other. Similarly, we see that the Truth column for Other tracks also **has over half** of the tracks **predicted correctly** with the corresponding track. Overall the algorithm performed with an **accuracy** around **60%** which isn't very convincing to say that there are actual patterns found to indicate different trends. 
+
+### What? I cannot see the wood for the trees! I am lost in the **forest**.
+
+```{r}
+forest_model <-
+  rand_forest() %>%
+  set_mode("classification") %>%
+  set_engine("ranger", importance = "impurity")
+corpus_forest <-
+  workflow() %>%
+  add_recipe(corpus_recipe) %>%
+  add_model(forest_model) %>%
+  fit_resamples(
+    corpus_cv,
+    control = control_resamples(save_pred = TRUE)
+  )
+```
+```{r}
+importance <- workflow() %>%
+  add_recipe(corpus_recipe) %>%
+  add_model(forest_model) %>%
+  fit(corpus_features) %>%
+  pluck("fit", "fit", "fit") %>%
+  ranger::importance() %>%
+  enframe() %>%
+  mutate(name = fct_reorder(name, value)) %>%
+  ggplot(aes(x = name, value )) +
+  geom_col(fill = "skyblue") +
+  coord_flip() +
+  theme_light() +
+  labs(x = NULL, y = "Importance")
+```
+```{r}
+ac_12 <-corpus_features %>%
+  ggplot(aes(x = c12, y = acousticness, colour = playlist, size = C)) +
+  geom_point(alpha = 0.8) +
+  scale_color_manual(values = c("#9FBEE1", "#1E3D60"))+
+  labs(
+    x = "12th Timbre component",
+    y = "Acousticness",
+    size = "C",
+    colour = "Trends"
+  ) + theme_light()
+
+grid.arrange(grobs = c(list(importance, ac_12)), nrow = 1, ncol = 2,
+             top = textGrob("Random forest",gp=gpar(fontsize=10,font=1)))
+```
+
+So maybe the KNN algorithm doesn't perform as well. **Another ML approach** is using a *random forest* algorithm. Basically what a random forests does is giving us the best-quality ranking of feature importance. A feature with a high importance denotes that the feature can be used fairly well to distinguish between the two trends. The importance plot can be seen on the left side. 
+
+It's actually surprising that the classifier thought the **Tempo** feature is **inessential** as it has a value lower than 1.0. **In line with our earlier findings** is that Valence, Energy, Danceability, Duration, and Loudness all have quite low importance, thus being unable to distinguish between the two trends. 
+
+For the **plot on the right** be picked the top 3 features to look at how well they distinguish the songs. We see that there is still no specfic division between Dance and Other tracks. And that is to no surprise. Overall the **accuracy** of the random forest model is around **55%**. 
+
+Remarkably, that the algorithm found that the 12th timbre component is the most important. For humans it becomes rather vague what the timbre component means after the 4th. 
+
+### Alright, let's wrap it up. What makes a TikTok song a TikTok song? And what are the trends like? 
+
+Well that was one hell of a ride. Do you all remember what you've been seeing and reading? Me neither. Instead of reading it all over again. Here is a short recap of what we've looked into.
+
+Starting of with the different emotions of songs, we saw that the Valence and Energy features didn't really distinguish between the two trends. On top of that Danceability was quite the same as well between the trends. 
+
+Moving on we dissected two self-similarity matrices for two archetypes songs, one from the Dance trend and one from the Other trend. We saw that sometimes the 15 seconds that are used for a TikTok song are specific pieces of songs. And sometimes a representative piece of the song is used. 
+Contrasting, in the third tab we highlighted an atypical song of the corpus. The keygram showed that the song was estimated by the Spotify API in another key than it is actually written. The reason for that could be the different tuning of the instruments. On top of that picking up the pitches of string intstruments is harder. 
+
+Then we looked at the entire corpus again by showcasing the Key and Tempo. Overall the Key didn't show as much information. And the Tempo was also not that special. Only the distribution was more uniformely for the Other trend. 
+
+Because this Tempo feature had a different distrubtion between the trends we dissected this feature by looking at the mean and standard deviation of the tempo for the tracks as well. Although, there wasn't a real finding here. Other than that the standard deviation for Dance tracks were usually around 0 and for the Other trend around 0.5
+
+Lastly we have looked at two different machine learning algorithms. Both the KNN and random forest algorithms didn't have a very high accuracy. 
+
+Alright and then the moment you all have been waiting for. **What did I learn** from looking into all these things? 
+
+Well, we've seen that to become **a popular TikTok song**, one needs to have 
+* High energy to get a Happy or Angry track,
+* A tempo around 120 BPM,
+* A duration around 3 minutes
+* Danceability around 0.85    
+
+And we've seen that there is **no real distinction** between the trends Dance VS Other. They turn out to be quite similar. 
+
+Hopefully I have managed to convince about that with my findings. Thank you for reading, and never stop grooving on the TikTok songs. 
+
