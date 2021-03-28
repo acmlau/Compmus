@@ -8,9 +8,7 @@ output:
     storyboard: true
     theme: "yeti"
     css: css_storyboard.css
-    # logo: images/tiktok_logo.png
     favicon: images/tiktok_logo.png
-# output: html_document
 ---
 ```{r, include=FALSE}
 # knitr::opts_chunk$set(warning=FALSE, message=FALSE)
@@ -927,6 +925,9 @@ ac_12 <-corpus_features %>%
 grid.arrange(grobs = c(list(importance, ac_12)), nrow = 1, ncol = 2,
              top = textGrob("Random forest",gp=gpar(fontsize=10,font=1)))
 ```
+
+
+*** 
 
 So maybe the KNN algorithm doesn't perform as well. **Another ML approach** is using a *random forest* algorithm. Basically what a random forests does is giving us the best-quality ranking of feature importance. A feature with a high importance denotes that the feature can be used fairly well to distinguish between the two trends. The importance plot can be seen on the left side. 
 
